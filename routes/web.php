@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -17,16 +17,18 @@ Route::get('/', function () {
 
 // Admin
 
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         requireRole('admin');
-
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
 
     Route::get('users', [UserController::class, 'index'])->name('users.index');
 
 });
+
 
 // Vendor
 // Route::middleware(['auth', 'verified', 'role:vendor'])->group(function () {
