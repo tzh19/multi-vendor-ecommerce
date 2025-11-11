@@ -20,12 +20,22 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        requireRole('admin');
-        return Inertia::render('Dashboard');
+
+        $user = auth()->user();
+
+        $props = [
+            'isAdmin' => $user->hasRole('admin'),
+            'isVendor' => $user->hasRole('vendor'),
+            'isCustomer' => $user->hasRole('customer'),
+        ];
+
+        return Inertia::render('Dashboard', $props);
     })->name('dashboard');
 
-
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users', function () {
+        requireRole('admin');
+        return app(\App\Http\Controllers\Admin\UserController::class)->index();
+    })->name('users.index');
 
 });
 

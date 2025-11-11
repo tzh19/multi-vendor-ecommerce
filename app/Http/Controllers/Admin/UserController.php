@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Example: paginate users
+
         $users = User::paginate(10)->through(fn ($user) => [
             'id' => $user->id,
             'name' => $user->name,

@@ -6,7 +6,6 @@ import { Head, usePage } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 
 const { users } = usePage().props;
-const userList = users?.data ?? [];
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -54,6 +53,18 @@ const breadcrumbs: BreadcrumbItem[] = [
                 class="px-3 py-1 border rounded"
               >
                 Previous
+              </button>
+              <!-- Page Numbers -->
+              <button
+                v-for="page in users.last_page"
+                :key="page"
+                @click="$inertia.visit(`/users?page=${page}`)"
+                :class="[
+                  'px-3 py-1 border rounded',
+                  { 'bg-blue-500 text-white': page === users.current_page },
+                ]"
+              >
+                {{ page }}
               </button>
               <button
                 v-if="users.next_page_url"

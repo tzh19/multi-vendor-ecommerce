@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -13,22 +14,31 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { route } from 'ziggy-js';
 
+const { props } = usePage<PageProps>();
+
+const role = props.value?.auth?.user?.role ?? 'guest';
+const isAdmin = role === 'admin';
+const isVendor = role === 'vendor';
+const isCustomer = role === 'customer';
+
+console.log('isAdmin:', isAdmin);
+
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'User',
-        href: route('users.index'), // directly call Laravel route
-        icon: Users
-    }
+  { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
+  ...(isAdmin
+    ? [
+        {
+          title: 'User',
+          href: route('users.index'),
+          icon: Users,
+        },
+      ]
+    : []),
 ];
 
 const footerNavItems: NavItem[] = [
