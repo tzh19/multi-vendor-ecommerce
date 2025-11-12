@@ -21,12 +21,11 @@ import { route } from 'ziggy-js';
 
 const { props } = usePage<PageProps>();
 
-const role = props.value?.auth?.user?.role ?? 'guest';
+const role = props?.auth?.user?.role ?? 'guest';
+
 const isAdmin = role === 'admin';
 const isVendor = role === 'vendor';
 const isCustomer = role === 'customer';
-
-console.log('isAdmin:', isAdmin);
 
 const mainNavItems: NavItem[] = [
   { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
