@@ -14,9 +14,9 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         // Create 10 main categories
-        Category::factory(10)->create();
+        Category::factory(5)->create();
 
-        Category::factory(20)->create([
+        Category::factory(10)->create([
             'parent_id' => function () {
                 return Category::inRandomOrder()->first()->id;
             },
