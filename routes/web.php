@@ -32,10 +32,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard', $props);
     })->name('dashboard');
 
-    Route::get('/users', function () {
+    Route::get('users', function () {
         requireRole('admin');
         return app(\App\Http\Controllers\Admin\UserController::class)->index();
     })->name('users.index');
+
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
 
 });
 
