@@ -38,6 +38,8 @@ const mainNavItems: NavItem[] = [
         },
       ]
     : []),
+  { title: 'Category', href: route('categories.index'), icon: Folder },
+
 ];
 
 const footerNavItems: NavItem[] = [
