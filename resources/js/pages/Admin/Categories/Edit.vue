@@ -6,52 +6,7 @@
       <div class="shadow rounded-lg p-6 bg-card text-card-foreground">
         <h2 class="text-xl font-bold mb-6">Edit Category</h2>
 
-        <form @submit.prevent="submit" class="space-y-6">
-          <!-- Name Field -->
-          <div class="grid gap-2">
-            <Label for="name">Category Name</Label>
-            <Input
-              id="name"
-              name="name"
-              placeholder="Enter category name"
-              v-model="form.name"
-              required
-              class="mt-1 block w-full h-12 px-3 text-lg rounded border"
-            />
-            <InputError :message="form.errors.name" />
-          </div>
-
-          <!-- Description Field -->
-          <div class="grid gap-2">
-            <Label for="description">Description</Label>
-            <textarea
-              id="description"
-              name="description"
-              placeholder="Enter description"
-              v-model="form.description"
-              class="mt-1 block w-full h-32 px-3 py-2 text-lg rounded border"
-            ></textarea>
-            <InputError :message="form.errors.description" />
-          </div>
-
-          <!-- Submit Button -->
-          <div class="flex justify-end gap-4">
-            <Button
-              type="submit"
-              :disabled="form.processing"
-              class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-            >
-              Update
-            </Button>
-            <Button
-              type="button"
-              @click="confirmDelete(category.id)"
-              class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
-            >
-              Delete
-            </Button>
-          </div>
-        </form>
+        <CategoryForm :form="form" :onSubmit="submit" submitText="Update Category" />
       </div>
     </div>
     <ConfirmModal
@@ -74,6 +29,7 @@ import InputError from "@/Components/InputError.vue";
 import Button from "@/Components/ui/button/Button.vue";
 import ConfirmModal from "@/Components/ConfirmModal.vue";
 import { ref } from "vue";
+import CategoryForm from "@/Components/category/CategoryForm.vue";
 
 const showModal = ref(false);
 const deletingId = ref(null);
