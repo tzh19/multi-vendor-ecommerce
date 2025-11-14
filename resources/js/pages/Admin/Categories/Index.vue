@@ -4,6 +4,8 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage, Link, router } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import { ref } from "vue";
+import ConfirmModal from "@/Components/ConfirmModal.vue";
 
 const { categories } = usePage().props;
 
@@ -13,6 +15,30 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('categories.index'),
     },
 ];
+
+const showModal = ref(false);
+const deletingId = ref(null);
+
+function confirmDelete(id: number) {
+  deletingId.value = id;
+  showModal.value = true;
+}
+
+function handleConfirm() {
+  if (deletingId.value) {
+    router.delete(route("categories.destroy", deletingId.value), {
+      onSuccess: (page) => {
+        categories.data = categories.data.filter((cat) => cat.id !== deletingId.value);
+      },
+      preserveScroll: true,
+    });
+    showModal.value = false;
+  }
+}
+
+function handleCancel() {
+  showModal.value = false;
+}
 </script>
 <template>
   <Head title="Categories" />
@@ -57,13 +83,13 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <td class="py-3 text-right">
                       <div class="flex justify-end gap-2">
                         <Link
-                          :href="`/admin/categories/${category.id}/edit`"
+                          :href="`categories/${category.id}/edit`"
                           class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                         >
                           Edit
                         </Link>
                         <button
-                          @click="deleteCategory(category.id)"
+                          @click="confirmDelete(category.id)"
                           class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
                         >
                           Delete
@@ -107,5 +133,11 @@ const breadcrumbs: BreadcrumbItem[] = [
         </div>
       </div>
     </div>
+    <ConfirmModal
+      :show="showModal"
+      message="Are you sure you want to delete this category?"
+      @confirm="handleConfirm"
+      @cancel="handleCancel"
+    />
   </AppLayout>
 </template>

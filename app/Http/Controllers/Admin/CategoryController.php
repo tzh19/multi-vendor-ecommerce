@@ -42,13 +42,13 @@ class CategoryController extends Controller
     {
         $validated = $request->validate(
             [
-            'name' => 'required|string|max:255|unique:categories,name',
-            'description' => 'nullable|string',
-        ],
+                'name' => 'required|string|max:255|unique:categories,name',
+                'description' => 'nullable|string',
+            ],
             [
-        'name.required' => 'Category name is required.',
-        'name.unique' => 'Category name has already been taken.',
-        ]
+                'name.required' => 'Category name is required.',
+                'name.unique' => 'Category name has already been taken.',
+            ]
         );
 
         $category = new Category();
@@ -73,7 +73,11 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+
+        return Inertia::render('Admin/Categories/Edit', [
+            'category' => $category
+        ]);
     }
 
     /**
@@ -81,7 +85,23 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $category = Category::findOrFail($id);
+
+        $validated = $request->validate(
+            [
+                'name' => 'required|string|max:255|unique:categories,name,' . $id,
+                'description' => 'nullable|string',
+            ],
+            [
+                'name.required' => 'Category name is required.',
+                'name.unique' => 'Category name has already been taken.',
+            ]
+        );
+
+        $category->update($validated);
+
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully');
     }
 
     /**
@@ -89,6 +109,10 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return redirect()->route('categories.index')->with('success', 'Category deleted successfully');
+
     }
 }
