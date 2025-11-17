@@ -12,6 +12,9 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use App\Http\Responses\CustomLoginResponse;
+
+use Laravel\Fortify\Contracts\LoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -31,6 +34,9 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+        
+$this->app->singleton(LoginResponse::class, CustomLoginResponse::class);
+
     }
 
     /**
