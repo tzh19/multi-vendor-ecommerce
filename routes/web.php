@@ -39,7 +39,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
 
+
+    Route::get('products', function () {
+        return app(\App\Http\Controllers\ProductController::class)->index();
+    })->name('products.index');
+
 });
+
 
 
 // Vendor
