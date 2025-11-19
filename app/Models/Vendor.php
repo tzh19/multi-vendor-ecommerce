@@ -12,6 +12,12 @@ class Vendor extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+        'store_name',
+        'store_description',
+        'active',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
