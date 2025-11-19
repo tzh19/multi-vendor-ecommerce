@@ -15,7 +15,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Users } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Users, Box } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { route } from 'ziggy-js';
 
@@ -39,7 +39,7 @@ const mainNavItems: NavItem[] = [
       ]
     : []),
   { title: 'Category', href: route('categories.index'), icon: Folder },
-
+  { title: 'Vendor', href: route('vendors.index'), icon: Box },
 ];
 
 const footerNavItems: NavItem[] = [
