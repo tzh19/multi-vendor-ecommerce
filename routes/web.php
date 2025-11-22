@@ -50,6 +50,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     });
 
+    Route::prefix('vendor')->name('vendor.')->group(function () {
+        Route::get('dashboard', [ \App\Http\Controllers\Vendor\VendorDashboardController::class, 'index'])->name('dashboard');
+    });
+
+
+
 });
 
 

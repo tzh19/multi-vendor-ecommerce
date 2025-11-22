@@ -15,7 +15,7 @@ class CustomLoginResponse implements LoginResponseContract
         }
 
         if ($user->hasRole('vendor')) {
-            return redirect()->route('vendor.dashboard');
+            return redirect()->route('dashboard');
         }
 
         if ($user->hasRole('admin')) {

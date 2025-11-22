@@ -39,8 +39,27 @@ const mainNavItems: NavItem[] = [
       ]
     : []),
   { title: 'Category', href: route('categories.index'), icon: Folder },
-  { title: 'Vendor', href: route('vendors.index'), icon: Store },
-  { title: 'Product', href: route('admin.products.index'), icon: Box },
+  {
+        title: 'Vendor',
+        icon: null,
+        href: null,
+  },
+  { title: 'Management', href: route('vendors.index'), icon: Store },
+  ...(isVendor
+    ? [
+        {
+          title: 'Dashboard',
+          href: route('vendor.dashboard'),
+          icon: LayoutGrid,
+        },
+      ]
+    : []),
+  {
+        title: 'Product',
+        icon: null,
+        href: null,
+  },
+  { title: 'Management', href: route('admin.products.index'), icon: Box },
 ];
 
 const footerNavItems: NavItem[] = [
