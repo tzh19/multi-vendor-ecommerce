@@ -13,6 +13,16 @@ class Product extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+    'name',
+    'description',
+    'category_id',
+    'vendor_id',
+    'stock',
+    'price',
+    'image',
+    ];
+
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
@@ -21,5 +31,15 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getFormattedPriceAttribute()
+    {
+        return '$' . number_format($this->price, 2);
+    }
+
+    public function getFormattedStockAttribute()
+    {
+        return number_format($this->stock);
     }
 }

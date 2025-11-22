@@ -45,6 +45,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('vendors', \App\Http\Controllers\Admin\VendorController::class);
 
+    Route::prefix('admin')->name('admin.')
+    ->group(function () {
+        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+    });
+
 });
 
 
