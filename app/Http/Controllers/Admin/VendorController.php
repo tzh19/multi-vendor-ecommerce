@@ -22,12 +22,8 @@ class VendorController extends Controller
                     'active' => $vendor->active,
                     'created_at' => $vendor->created_at->format('d M, Y'),
                 ]);
-        $user = new User();
-        $vendorUsers = $user->getUserByRole('vendor');
-
         return Inertia::render('Admin/Vendors/Index', [
-            'vendors' => $vendors,
-            'vendorUsers' => $vendorUsers
+            'vendors' => $vendors
         ]);
 
     }
