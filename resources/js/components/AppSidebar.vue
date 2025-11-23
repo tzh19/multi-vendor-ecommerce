@@ -28,7 +28,20 @@ const isVendor = role === 'vendor';
 const isCustomer = role === 'customer';
 
 const mainNavItems: NavItem[] = [
+  ...(isAdmin
+    ? [
   { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
+   ]
+    : []),
+     ...(isVendor
+    ? [
+        {
+          title: 'Dashboard',
+          href: route('vendor.dashboard'),
+          icon: LayoutGrid,
+        },
+      ]
+    : []),
   ...(isAdmin
     ? [
         {
@@ -45,15 +58,7 @@ const mainNavItems: NavItem[] = [
         href: null,
   },
   { title: 'Management', href: route('vendors.index'), icon: Store },
-  ...(isVendor
-    ? [
-        {
-          title: 'Dashboard',
-          href: route('vendor.dashboard'),
-          icon: LayoutGrid,
-        },
-      ]
-    : []),
+
   {
         title: 'Product',
         icon: null,

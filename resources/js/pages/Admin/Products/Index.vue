@@ -87,7 +87,7 @@ function handleCancel() {
                     <td class="px-4 py-2 w-32 text-right">
                       <div class="flex justify-end gap-2">
                         <Link
-                          :href="`products/${product.id}/edit`"
+                          :href="`/admin/products/${product.id}/edit`"
                           class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                         >
                           Edit

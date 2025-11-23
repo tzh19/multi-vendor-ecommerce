@@ -79,7 +79,7 @@ const form = useForm({
   description: props.product.description,
   price: props.product.price, // default
   stock: props.product.stock,
-  image: props.product.image,
+  image: null,
 });
 
 function submit() {
