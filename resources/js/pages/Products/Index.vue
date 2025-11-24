@@ -1,10 +1,24 @@
 <script setup>
 import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { router } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 const props = defineProps({
   products: Object,
+  filters: Object,
 });
+
+const searchTerm = ref(props.filters?.search || "");
+function search() {
+  router.get(
+    route("products.index"),
+    { search: searchTerm.value },
+    {
+      preserveState: true,
+      replace: true,
+    }
+  );
+}
 
 function addToCart(productId) {
   router.post(route("cart.add"), { product_id: productId });
@@ -15,6 +29,16 @@ function addToCart(productId) {
   <CustomerLayout>
     <h1 class="text-2xl font-bold mb-6">Products</h1>
 
+    <!-- Search Bar -->
+    <div class="mb-5">
+      <input
+        v-model="searchTerm"
+        @input="search"
+        type="text"
+        placeholder="Search products..."
+        class="w-full border rounded px-3 py-2"
+      />
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <div
         v-for="product in products.data"
