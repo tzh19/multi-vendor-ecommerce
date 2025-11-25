@@ -39,7 +39,12 @@ function addToCart(productId) {
         class="w-full border rounded px-3 py-2"
       />
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- No Products Found -->
+    <div v-if="products.data.length === 0" class="text-center text-gray-500 py-10">
+      No products found.
+    </div>
+
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <div
         v-for="product in products.data"
         :key="product.id"
@@ -61,7 +66,7 @@ function addToCart(productId) {
       </div>
     </div>
     <!-- Pagination -->
-    <div class="mt-4 flex gap-2">
+    <div v-if="products.data.length > 0" class="mt-4 flex gap-2">
       <button
         v-if="products.prev_page_url"
         @click="$inertia.visit(products.prev_page_url)"

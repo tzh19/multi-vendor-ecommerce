@@ -45,10 +45,10 @@ const page = usePage();
           <Link class="relative text-white text-xl">
             🛒
             <span
-              v-if="page.props.cart_count > 0"
+              v-if="page.props.cartCount > 0"
               class="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-2 rounded-full"
             >
-              {{ page.props.cart_count }}
+              {{ page.props.cartCount }}
             </span>
           </Link>
 
