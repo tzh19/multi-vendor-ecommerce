@@ -42,7 +42,7 @@ const page = usePage();
 
         <div class="flex items-center gap-6">
           <!-- Cart -->
-          <Link class="relative text-white text-xl">
+          <Link :href="route('cart.index')" class="relative text-white text-xl">
             🛒
             <span
               v-if="page.props.cartCount > 0"

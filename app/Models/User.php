@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return User::where('role', 'vendor')->get(['id', 'name']);
     }
+
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

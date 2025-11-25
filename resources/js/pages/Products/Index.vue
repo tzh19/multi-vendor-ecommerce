@@ -21,7 +21,7 @@ function search() {
 }
 
 function addToCart(productId) {
-  router.post(route("cart.add"), { product_id: productId });
+  router.post(route("cart.store"), { product_id: productId });
 }
 </script>
 

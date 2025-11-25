@@ -26,10 +26,9 @@ class AppServiceProvider extends ServiceProvider
                    'user' => Auth::user(),
                    'role' => Auth::user()?->role,
                ],
-               'cartCount' => function () {
-                   $cart = session()->get('cart', []);
-                   return array_sum(array_column($cart, 'quantity'));
-               }
+               'cartCount' => fn () => Auth::check()
+               ? Auth::user()->cartItems()->sum('quantity')
+               : 0,
            ]);
 
     }
