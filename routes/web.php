@@ -56,6 +56,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('cart', \App\Http\Controllers\CartController::class)
     ->only(['store', 'index', 'destroy']);
+
+    Route::get('/checkout/success/{id}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
+
+    Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
 });
 
 

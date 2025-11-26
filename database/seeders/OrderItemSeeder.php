@@ -2,27 +2,24 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Order;
-use App\Models\Product;
 use App\Models\OrderItem;
+use Illuminate\Database\Seeder;
 
 class OrderItemSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        $orders = Order::all();
-        $products = Product::all();
+        // Create 2-5 items per order
+        $orders = \App\Models\Order::all();
 
-        OrderItem::factory()->count(80)->make()->each(function ($orderItem) use ($orders, $products) {
-            $orderItem->order_id = $orders->random()->id;
-            $orderItem->product_id = $products->random()->id;
-            $orderItem->save();
-        });
-
+        foreach ($orders as $order) {
+            \App\Models\Product::inRandomOrder()->take(rand(2, 5))->get()->each(function ($product) use ($order) {
+                OrderItem::factory()->create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'price' => $product->price,
+                ]);
+            });
+        }
     }
 }
