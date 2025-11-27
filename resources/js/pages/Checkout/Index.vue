@@ -1,6 +1,7 @@
 <script setup>
 import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { useForm } from "@inertiajs/vue3";
+import { money } from "@/utils/money.js";
 
 const props = defineProps({
   cartItems: Array, // passed from backend
@@ -23,13 +24,12 @@ const form = useForm({
         <ul>
           <li v-for="item in cartItems" :key="item.id" class="flex justify-between">
             <span>{{ item.product.name }} x {{ item.quantity }}</span>
-            <span>$ {{ (item.product.price * item.quantity).toFixed(2) }}</span>
+            <span>{{ money(item.product.price * item.quantity) }}</span>
           </li>
         </ul>
         <div class="mt-2 font-bold">
-          Subtotal: ${{
-            cartItems.reduce((sum, i) => sum + i.product.price * i.quantity, 0).toFixed(2)
-          }}
+          Subtotal:
+          {{ money(cartItems.reduce((sum, i) => sum + i.product.price * i.quantity, 0)) }}
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import { Head } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
 import { route } from 'ziggy-js';
 import ApexCharts from 'vue3-apexcharts';
+import { money } from "@/utils/money.js";
 
 const props = defineProps({
   salesPerProduct: {
@@ -88,7 +89,7 @@ const chartSeries = [
                 <td
                   class="px-6 py-4 whitespace-nowrap text-right text-gray-700 dark:text-gray-300"
                 >
-                  ${{ Number(product.revenue ?? 0).toFixed(2) }}
+                  {{ money(product.revenue ?? 0) }}
                 </td>
               </tr>
               <tr v-if="salesPerProduct.length === 0">

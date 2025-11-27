@@ -1,6 +1,7 @@
 <script setup>
 import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { Link } from "@inertiajs/vue3";
+import { money } from "@/utils/money.js";
 
 const props = defineProps({
   order: Object,
@@ -35,20 +36,20 @@ const items = props.order.items;
             class="border-b border-gray-700 p-2 flex items-center gap-4"
           >
             <span>{{ item.product.name }} x {{ item.quantity }}</span>
-            <span>$ {{ (item.price * item.quantity).toFixed(2) }}</span>
+            <span>{{ money(item.price * item.quantity) }}</span>
           </li>
         </ul>
         <div class="flex justify-between mt-2 font-bold">
           <span>Subtotal:</span>
-          <span>$ {{ subtotal.toFixed(2) }}</span>
+          <span>{{ money(subtotal) }}</span>
         </div>
         <div class="flex justify-between font-bold">
           <span>Shipping:</span>
-          <span>$ {{ shipping.toFixed(2) }}</span>
+          <span>{{ money(shipping) }}</span>
         </div>
         <div class="flex justify-between font-bold text-xl mt-1">
           <span>Total:</span>
-          <span>$ {{ total.toFixed(2) }}</span>
+          <span>{{ money(total) }}</span>
         </div>
       </div>
 
@@ -65,9 +66,7 @@ const items = props.order.items;
             <div>
               <h3 class="font-semibold">{{ item.product.name }}</h3>
               <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
-              <p class="font-bold">
-                $ {{ (Number(item.price) * item.quantity).toFixed(2) }}
-              </p>
+              <p class="font-bold">{{ money(item.price * item.quantity) }}</p>
             </div>
           </li>
         </ul>

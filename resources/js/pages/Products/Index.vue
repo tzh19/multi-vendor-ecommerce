@@ -2,6 +2,7 @@
 import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { router } from "@inertiajs/vue3";
 import { ref } from "vue";
+import { money } from "@/utils/money.js";
 
 const props = defineProps({
   products: Object,
@@ -55,7 +56,7 @@ function addToCart(productId) {
         <h2 class="text-lg font-semibold mt-3">{{ product.name }}</h2>
         <p class="text-gray-500">{{ product.vendor?.name }}</p>
 
-        <p class="text-xl font-bold mt-2">$ {{ product.price }}</p>
+        <p class="text-xl font-bold mt-2">{{ money(product.price) }}</p>
 
         <button
           @click="addToCart(product.id)"

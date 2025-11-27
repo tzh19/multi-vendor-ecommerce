@@ -3,6 +3,7 @@ import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { Link, router } from "@inertiajs/vue3";
 import ConfirmModal from "@/Components/ConfirmModal.vue";
 import { reactive } from "vue";
+import { money } from "@/utils/money.js";
 
 const props = defineProps({
   cartItems: Array,
@@ -43,7 +44,7 @@ function handleCancel(id) {
           <div class="flex-1">
             <h2 class="font-semibold text-lg">{{ item.product.name }}</h2>
             <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
-            <p class="font-bold">$ {{ item.product.price }}</p>
+            <p class="font-bold">{{ money(item.product.price) }}</p>
           </div>
 
           <button
