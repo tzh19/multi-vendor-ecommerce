@@ -61,6 +61,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::get('/orders', [\App\Http\Controllers\CustomerOrderController::class, 'index'])->name('customer.orders.index');
+    Route::get('/customer/orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])
+       ->name('customer.orders.show');
+
 });
 
 

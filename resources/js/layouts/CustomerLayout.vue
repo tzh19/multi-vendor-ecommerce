@@ -25,7 +25,10 @@ const page = usePage();
           Categories
         </Link>
 
-        <Link class="block px-3 py-2 rounded hover:bg-gray-700 transition">
+        <Link
+          :href="route('customer.orders.index')"
+          class="block px-3 py-2 rounded hover:bg-gray-700 transition"
+        >
           My Orders
         </Link>
       </nav>
