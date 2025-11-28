@@ -66,6 +66,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/customer/orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])
        ->name('customer.orders.show');
 
+
+    Route::get('/vendor/orders', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'index'])->name('vendor.orders.index');
+    Route::get('/vendor/orders/{order}', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'show'])->name('vendor.orders.show');
+
+
 });
 
 

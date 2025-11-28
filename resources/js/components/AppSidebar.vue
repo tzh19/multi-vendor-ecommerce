@@ -65,6 +65,24 @@ const mainNavItems: NavItem[] = [
         href: null,
   },
   { title: 'Management', href: route('admin.products.index'), icon: Box },
+  ...(isVendor
+    ? [
+  {
+        title: 'Order',
+        icon: null,
+        href: null,
+  },
+   ]
+    : []),
+   ...(isVendor
+    ? [
+        {
+          title: 'Management',
+          href: route('vendor.orders.index'),
+          icon: LayoutGrid,
+        },
+      ]
+    : []),
 ];
 
 const footerNavItems: NavItem[] = [
