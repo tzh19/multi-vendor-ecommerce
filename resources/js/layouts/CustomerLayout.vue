@@ -1,7 +1,13 @@
 <script setup>
-import { Link, usePage } from "@inertiajs/vue3";
+import { Link, usePage, router } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
+import { logout } from "@/routes";
+
 const page = usePage();
+
+const handleLogout = () => {
+  router.flushAll();
+};
 </script>
 
 <template>
@@ -56,9 +62,16 @@ const page = usePage();
           </Link>
 
           <!-- Logout -->
-          <form method="POST" :action="route('logout')">
-            <button class="text-red-400 hover:text-red-300">Logout</button>
-          </form>
+          <Link
+            class="text-red-400 hover:text-red-300"
+            :href="logout()"
+            @click="handleLogout"
+            as="button"
+            data-test="logout-button"
+          >
+            <LogOut class="mr-2 h-4 w-4" />
+            Log out
+          </Link>
         </div>
       </header>
 
