@@ -77,4 +77,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Vendor::class);
     }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isVendor()
+    {
+        return $this->role === 'vendor';
+    }
 }

@@ -16,7 +16,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(10)->through(fn ($product) => [
+        $user = auth()->user();
+
+        $query = Product::query();
+
+        if ($user->isVendor()) {
+            $query->where('vendor_id', $user->id);
+        }
+
+        $products = $query->paginate(10)->through(fn ($product) => [
                    'id' => $product->id,
                    'product_id' => $product->product_id,
                    'category_id' => $product->category_id,

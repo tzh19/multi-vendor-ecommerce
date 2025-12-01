@@ -32,27 +32,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard', $props);
     })->name('dashboard');
 
-    Route::get('users', function () {
-        requireRole('admin');
-        return app(\App\Http\Controllers\Admin\UserController::class)->index();
-    })->name('users.index');
 
-    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    Route::middleware(['role:admin,vendor'])
+        ->group(function () {
+
+            Route::get('users', function () {
+                requireRole('admin');
+                return app(\App\Http\Controllers\Admin\UserController::class)->index();
+            })->name('users.index');
+
+            Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+
+            Route::prefix('admin')->name('admin.')
+                ->group(function () {
+                    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+                });
+
+
+            Route::resource('vendors', \App\Http\Controllers\Admin\VendorController::class);
+
+        });
 
 
     Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
-
-
-    Route::resource('vendors', \App\Http\Controllers\Admin\VendorController::class);
-
-    Route::prefix('admin')->name('admin.')
-    ->group(function () {
-        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
-    });
-
-    Route::prefix('vendor')->name('vendor.')->group(function () {
-        Route::get('dashboard', [ \App\Http\Controllers\Vendor\VendorDashboardController::class, 'index'])->name('dashboard');
-    });
 
     Route::resource('cart', \App\Http\Controllers\CartController::class)
     ->only(['store', 'index', 'destroy']);
@@ -66,21 +68,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/customer/orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])
        ->name('customer.orders.show');
 
-
-    Route::get('/vendor/orders', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'index'])->name('vendor.orders.index');
-    Route::get('/vendor/orders/{order}', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'show'])->name('vendor.orders.show');
-
-
 });
 
 
 
 // Vendor
-// Route::middleware(['auth', 'verified', 'role:vendor'])->group(function () {
-//     Route::get('/vendor/dashboard', function () {
-//         return Inertia::render('Dashboard');
-//     })->name('dashboard');
-// });
+Route::middleware(['role:vendor'])->group(function () {
+    Route::prefix('vendor')->name('vendor.')->group(function () {
+        Route::get('dashboard', [ \App\Http\Controllers\Vendor\VendorDashboardController::class, 'index'])->name('dashboard');
+    });
+
+    Route::get('/vendor/orders', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'index'])->name('vendor.orders.index');
+    Route::get('/vendor/orders/{order}', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'show'])->name('vendor.orders.show');
+
+    Route::prefix('vendor')->name('vendor.')->group(function () {
+        Route::get('dashboard', [ \App\Http\Controllers\Vendor\VendorDashboardController::class, 'index'])->name('dashboard');
+    });
+
+});
 
 // Customer
 // Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
