@@ -68,6 +68,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/customer/orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])
        ->name('customer.orders.show');
 
+
+    Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('customer.home.index');
+
+    Route::get('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'show'])
+        ->name('categories.show');
+
 });
 
 
