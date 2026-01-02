@@ -21,6 +21,7 @@ class Product extends Model
     'stock',
     'price',
     'image',
+    'is_active',
     ];
 
     public function vendor()
@@ -46,5 +47,10 @@ class Product extends Model
     public function getFormattedStockAttribute()
     {
         return number_format($this->stock);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }
