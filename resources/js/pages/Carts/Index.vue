@@ -4,6 +4,7 @@ import { Link, router } from "@inertiajs/vue3";
 import ConfirmModal from "@/Components/ConfirmModal.vue";
 import { reactive } from "vue";
 import { money } from "@/utils/money.js";
+import { route } from "ziggy-js";
 
 const props = defineProps({
   cartItems: Array,
@@ -25,7 +26,15 @@ function handleCancel(id) {
 </script>
 
 <template>
-  <CustomerLayout>
+  <CustomerLayout
+    :breadcrumbs="[
+      { title: 'Home', href: route('customer.home.index') },
+      {
+        title: 'Your Cart',
+        href: route('cart.index'),
+      },
+    ]"
+  >
     <div class="p-6">
       <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
 

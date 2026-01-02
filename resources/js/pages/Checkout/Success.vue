@@ -2,6 +2,7 @@
 import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { Link } from "@inertiajs/vue3";
 import { money } from "@/utils/money.js";
+import { route } from "ziggy-js";
 
 const props = defineProps({
   order: Object,
@@ -16,7 +17,15 @@ const items = props.order.items;
 </script>
 
 <template>
-  <CustomerLayout>
+  <CustomerLayout
+    :breadcrumbs="[
+      { title: 'Home', href: route('customer.home.index') },
+      {
+        title: 'Checkout',
+        href: route('checkout.index'),
+      },
+    ]"
+  >
     <div class="max-w-2xl mx-auto p-6 bg-gray-900 text-gray-100 rounded shadow-md">
       <!-- Success Message -->
       <h1 class="text-2xl font-bold mb-4 text-green-600">Order Placed Successfully!</h1>

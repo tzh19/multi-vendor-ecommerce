@@ -1,6 +1,7 @@
 <script setup>
 import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { money } from "@/utils/money.js";
+import { route } from "ziggy-js";
 
 const props = defineProps({
   order: Object,
@@ -8,7 +9,15 @@ const props = defineProps({
 </script>
 
 <template>
-  <CustomerLayout>
+  <CustomerLayout
+    :breadcrumbs="[
+      { title: 'Home', href: route('customer.home.index') },
+      {
+        title: `Order #${props.order.id}`,
+        href: route('customer.orders.show', order.id),
+      },
+    ]"
+  >
     <div class="p-6 text-gray-200">
       <h1 class="text-2xl font-bold mb-6">Order #{{ props.order.id }}</h1>
 

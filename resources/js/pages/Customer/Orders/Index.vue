@@ -10,7 +10,12 @@ const props = defineProps({
 </script>
 
 <template>
-  <CustomerLayout>
+  <CustomerLayout
+    :breadcrumbs="[
+      { title: 'Home', href: route('customer.home.index') },
+      { title: 'My Orders', href: route('customer.orders.index') },
+    ]"
+  >
     <div class="p-6 text-gray-200">
       <h1 class="text-2xl font-bold mb-6">My Orders</h1>
 

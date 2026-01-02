@@ -2,6 +2,7 @@
 import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { useForm } from "@inertiajs/vue3";
 import { money } from "@/utils/money.js";
+import { route } from "ziggy-js";
 
 const props = defineProps({
   cartItems: Array, // passed from backend
@@ -14,7 +15,15 @@ const form = useForm({
 </script>
 
 <template>
-  <CustomerLayout>
+  <CustomerLayout
+    :breadcrumbs="[
+      { title: 'Home', href: route('customer.home.index') },
+      {
+        title: 'Checkout',
+        href: route('checkout.index'),
+      },
+    ]"
+  >
     <div class="max-w-xl mx-auto p-6 bg-gray-800 text-gray-100 rounded shadow-md">
       <h1 class="text-xl font-bold mb-4">Checkout</h1>
 
