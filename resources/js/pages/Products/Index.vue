@@ -3,6 +3,7 @@ import CustomerLayout from "@/Layouts/CustomerLayout.vue";
 import { router } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { money } from "@/utils/money.js";
+import { route } from "ziggy-js";
 
 const props = defineProps({
   products: Object,
@@ -24,73 +25,107 @@ function search() {
 function addToCart(productId) {
   router.post(route("cart.store"), { product_id: productId });
 }
+
+const dummyImage =
+  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80";
 </script>
 
 <template>
-  <CustomerLayout>
-    <h1 class="text-2xl font-bold mb-6">Products</h1>
+  <CustomerLayout
+    :breadcrumbs="[
+      { title: 'Home', href: route('customer.home.index') },
+      { title: 'Products', href: route('products.index') },
+    ]"
+  >
+    <h1 class="text-2xl font-bold mb-6 text-gray-100">Products</h1>
 
     <!-- Search Bar -->
-    <div class="mb-5">
+    <div class="mb-6">
       <input
         v-model="searchTerm"
         @input="search"
         type="text"
         placeholder="Search products..."
-        class="w-full border rounded px-3 py-2"
+        class="w-full rounded-lg bg-gray-800 border border-gray-700 px-4 py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>
-    <!-- No Products Found -->
-    <div v-if="products.data.length === 0" class="text-center text-gray-500 py-10">
+
+    <!-- No Products -->
+    <div v-if="products.data.length === 0" class="text-center text-gray-400 py-12">
       No products found.
     </div>
 
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Product Grid -->
+    <div
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+    >
       <div
         v-for="product in products.data"
         :key="product.id"
-        class="p-4 border rounded shadow bg-grey"
+        class="group rounded-xl border border-gray-700 bg-gray-800 overflow-hidden transition hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10"
       >
-        <img :src="product.image_url" class="w-full h-40 object-cover rounded" />
+        <!-- Image -->
+        <div class="overflow-hidden">
+          <img
+            :src="product.image_url || dummyImage"
+            alt="Product"
+            class="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
 
-        <h2 class="text-lg font-semibold mt-3">{{ product.name }}</h2>
-        <p class="text-gray-500">{{ product.vendor?.name }}</p>
+        <!-- Content -->
+        <div class="p-4">
+          <h2 class="text-lg font-semibold text-gray-100">
+            {{ product.name }}
+          </h2>
 
-        <p class="text-xl font-bold mt-2">{{ money(product.price) }}</p>
+          <p class="text-sm text-gray-400">
+            {{ product.vendor?.name || "Unknown vendor" }}
+          </p>
 
-        <button
-          @click="addToCart(product.id)"
-          class="mt-3 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Add to Cart
-        </button>
+          <p class="text-xl font-bold text-gray-100 mt-2">
+            {{ money(product.price) }}
+          </p>
+
+          <button
+            @click="addToCart(product.id)"
+            class="mt-4 w-full rounded-lg bg-blue-600 text-white py-2 transition hover:bg-blue-700"
+          >
+            Add to Cart
+          </button>
+        </div>
       </div>
     </div>
+
     <!-- Pagination -->
-    <div v-if="products.data.length > 0" class="mt-4 flex gap-2">
+    <div v-if="products.data.length > 0" class="mt-8 flex flex-wrap gap-2">
       <button
         v-if="products.prev_page_url"
         @click="$inertia.visit(products.prev_page_url)"
-        class="px-3 py-1 border rounded"
+        class="px-3 py-1 rounded border border-gray-700 text-gray-300 hover:bg-gray-700"
       >
         Previous
       </button>
-      <!-- Page Numbers -->
+
       <button
         v-for="page in products.last_page"
         :key="page"
         @click="$inertia.visit(`/products?page=${page}`)"
         :class="[
-          'px-3 py-1 border rounded',
-          { 'bg-blue-500 text-white': page === products.current_page },
+          'px-3 py-1 rounded border transition',
+          page === products.current_page
+            ? 'bg-blue-600 border-blue-600 text-white'
+            : 'border-gray-700 text-gray-300 hover:bg-gray-700',
         ]"
       >
         {{ page }}
       </button>
+
       <button
         v-if="products.next_page_url"
         @click="$inertia.visit(products.next_page_url)"
-        class="px-3 py-1 border rounded"
+        class="px-3 py-1 rounded border border-gray-700 text-gray-300 hover:bg-gray-700"
       >
         Next
       </button>
