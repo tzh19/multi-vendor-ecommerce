@@ -41,6 +41,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 return app(\App\Http\Controllers\Admin\UserController::class)->index();
             })->name('users.index');
 
+
+            Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+
             Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
 
             Route::prefix('admin')->name('admin.')

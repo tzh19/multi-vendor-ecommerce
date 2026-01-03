@@ -2,8 +2,10 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head, usePage, Link, router } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import { ref } from "vue";
+import ConfirmModal from "@/Components/ConfirmModal.vue";
 
 const { users } = usePage().props;
 
@@ -13,6 +15,30 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('users.index'),
     },
 ];
+
+const showModal = ref(false);
+const deletingId = ref(null);
+
+function confirmDelete(id: number) {
+  deletingId.value = id;
+  showModal.value = true;
+}
+
+function handleConfirm() {
+  if (deletingId.value) {
+    router.delete(route("users.destroy", deletingId.value), {
+      onSuccess: (page) => {
+        users.data = users.data.filter((cat) => cat.id !== deletingId.value);
+      },
+      preserveScroll: true,
+    });
+    showModal.value = false;
+  }
+}
+
+function handleCancel() {
+  showModal.value = false;
+}
 </script>
 <template>
   <Head title="Users" />
@@ -31,7 +57,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <th class="pb-3">Name</th>
                     <th class="pb-3">Email</th>
                     <th class="pb-3">Role</th>
+                    <th class="pb-3">Active</th>
                     <th class="pb-3">Created</th>
+                    <th class="pb-3">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -40,7 +68,35 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <td class="py-3">{{ user.name }}</td>
                     <td class="py-3">{{ user.email }}</td>
                     <td class="py-3">{{ user.role }}</td>
+                    <td class="py-3">
+                      <span
+                        class="px-2 py-1 rounded text-xs font-semibold"
+                        :class="
+                          user.is_active
+                            ? 'bg-green-600/20 text-green-400'
+                            : 'bg-red-600/20 text-red-400'
+                        "
+                      >
+                        {{ user.is_active ? "Active" : "Inactive" }}
+                      </span>
+                    </td>
                     <td class="py-3">{{ user.created_at }}</td>
+                    <td class="py-3">
+                      <div class="flex gap-2">
+                        <Link
+                          :href="`users/${user.id}/edit`"
+                          class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          @click="confirmDelete(user.id)"
+                          class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -78,5 +134,11 @@ const breadcrumbs: BreadcrumbItem[] = [
         </div>
       </div>
     </div>
+    <ConfirmModal
+      :show="showModal"
+      message="Are you sure you want to delete this user?"
+      @confirm="handleConfirm"
+      @cancel="handleCancel"
+    />
   </AppLayout>
 </template>
