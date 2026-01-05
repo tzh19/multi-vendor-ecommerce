@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import { Link, usePage } from "@inertiajs/vue3";
-import type { BreadcrumbItemType } from "@/types";
-import { money } from "@/utils/money.js";
+import type { BreadcrumbItemType, User } from "@/types";
 import { route } from "ziggy-js";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
+import UserMenu from "@/Components/UserMenuContent.vue";
 
 interface Props {
   breadcrumbs?: BreadcrumbItemType[];
 }
-const props = defineProps<Props>();
+
+defineProps<Props>();
 
 const page = usePage();
+const user = page.props.auth.user as User;
 </script>
 
 <template>
@@ -75,6 +82,7 @@ const page = usePage();
 
         <!-- Cart Icon -->
         <div class="flex items-center gap-6">
+          <!-- Cart -->
           <Link :href="route('cart.index')" class="relative text-white text-xl">
             🛒
             <span
@@ -84,6 +92,27 @@ const page = usePage();
               {{ page.props.cartCount }}
             </span>
           </Link>
+
+          <!-- User Menu -->
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <button
+                class="flex items-center gap-2 rounded-full px-2 py-1 hover:bg-gray-700 transition"
+              >
+                <img :src="user.avatar ?? '/avatar.png'" class="h-8 w-8 rounded-full" />
+                <span class="hidden sm:block text-sm text-white">
+                  {{ user.name }}
+                </span>
+              </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="end"
+              class="w-56 bg-gray-800 border-gray-700 text-gray-200"
+            >
+              <UserMenu :user="user" />
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
