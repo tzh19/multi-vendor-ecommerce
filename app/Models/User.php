@@ -94,4 +94,9 @@ class User extends Authenticatable
     {
         return $this->role === 'vendor';
     }
+
+    public function isCustomer()
+    {
+        return $this->role === 'customer';
+    }
 }
