@@ -87,6 +87,6 @@ class CartController extends Controller
 
         $cart->delete();
 
-        return redirect()->route('carts.index')->with('success', 'Cart removed successfully');
+        return redirect()->route('cart.index')->with('success', 'Cart removed successfully');
     }
 }
