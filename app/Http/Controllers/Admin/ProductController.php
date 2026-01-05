@@ -8,9 +8,12 @@ use App\Models\Vendor;
 use App\Models\Product;
 use App\Models\Category;
 use Inertia\Inertia;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ProductController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -18,12 +21,15 @@ class ProductController extends Controller
     {
         $user = auth()->user();
 
-        $query = Product::query();
+        $query = Product::query()->latest();
 
+        // Vendor sees only their products
         if ($user->isVendor()) {
             $query->where('vendor_id', $user->id);
         }
 
+        // Admin sees all (no filter)
+        // Customer should never reach this route (route middleware)
         $products = $query->paginate(10)->through(fn ($product) => [
                    'id' => $product->id,
                    'product_id' => $product->product_id,
@@ -34,6 +40,12 @@ class ProductController extends Controller
                    'stock' => $product->formatted_stock,
                    'image' => $product->image,
                    'created_at' => $product->created_at->format('d M, Y'),
+
+                   // 👇 Policy-driven UI permissions
+                   'can' => [
+                    'update' => $user->can('update', $product),
+                    'delete' => $user->can('delete', $product),
+                ],
                ]);
 
         return Inertia::render('Admin/Products/Index', [
@@ -108,6 +120,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
+        $this->authorize('update', $product);
+
         $vendors = Vendor::where('active', 1)->get(['id', 'store_name']);
         $categories = Category::get(['id', 'name']);
 
@@ -158,6 +172,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete', $product);
+
         $product = Product::findOrFail($id);
         $product->delete();
 
