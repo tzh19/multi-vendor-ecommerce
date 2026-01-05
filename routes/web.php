@@ -11,27 +11,20 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-// Route::get('dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-// Admin
-
-
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
 
-        $user = auth()->user();
+    Route::middleware(['role:admin,vendor'])->group(function () {
+        Route::get('dashboard', function () {
 
-        $props = [
-            'isAdmin' => $user->hasRole('admin'),
-            'isVendor' => $user->hasRole('vendor'),
-            'isCustomer' => $user->hasRole('customer'),
-        ];
+            $user = auth()->user();
 
-        return Inertia::render('Dashboard', $props);
-    })->name('dashboard');
+            return Inertia::render('Dashboard', [
+                'isAdmin'  => $user->hasRole('admin'),
+                'isVendor' => $user->hasRole('vendor'),
+            ]);
 
+        })->name('dashboard');
+    });
 
     Route::middleware(['role:admin,vendor'])
         ->group(function () {
@@ -71,13 +64,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/customer/orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])
        ->name('customer.orders.show');
 
-
     Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('customer.home.index');
 
     Route::get('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'show'])
         ->name('categories.show');
 
 });
+
+
+
 
 
 
