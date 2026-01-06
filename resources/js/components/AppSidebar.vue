@@ -15,7 +15,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Users, Box, Store  } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Users, Box, Store, ShoppingBag, Home, Package   } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { route } from 'ziggy-js';
 
@@ -51,20 +51,36 @@ const mainNavItems: NavItem[] = [
         },
       ]
     : []),
-  { title: 'Category', href: route('categories.index'), icon: Folder },
+  ...(isAdmin || isVendor
+    ? [
+      { title: 'Category', href: route('categories.index'), icon: Folder },
+      ]
+    : []),
+    ...(isAdmin || isVendor
+    ? [
   {
         title: 'Vendor',
         icon: null,
         href: null,
-  },
+  }, ]
+    : []),
+    ...(isAdmin || isVendor
+    ? [
   { title: 'Management', href: route('vendors.index'), icon: Store },
-
+   ]
+    : []),
+...(isAdmin || isVendor
+    ? [
   {
         title: 'Product',
         icon: null,
         href: null,
-  },
-  { title: 'Management', href: route('admin.products.index'), icon: Box },
+  },]
+    : []),
+    ...(isAdmin || isVendor
+    ? [
+  { title: 'Management', href: route('admin.products.index'), icon: Box },]
+    : []),
   ...(isVendor
     ? [
   {
@@ -83,19 +99,37 @@ const mainNavItems: NavItem[] = [
         },
       ]
     : []),
+    ...(isCustomer
+    ? [
+        {
+          title: 'Home',
+          href: route('customer.home.index'),
+          icon: Home,
+        },
+      ]
+    : []),
+    ...(isCustomer
+    ? [
+        {
+          title: 'Products',
+          href: route('products.index'),
+          icon: ShoppingBag,
+        },
+      ]
+    : []),
+    ...(isCustomer
+    ? [
+        {
+          title: 'My Orders',
+          href: route('customer.orders.index'),
+          icon: Package,
+        },
+      ]
+    : []),
 ];
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
+
 ];
 </script>
 

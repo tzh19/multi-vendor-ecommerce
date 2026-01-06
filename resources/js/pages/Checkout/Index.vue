@@ -1,49 +1,87 @@
-<script setup>
-import CustomerLayout from "@/Layouts/CustomerLayout.vue";
+<script setup lang="ts">
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { useForm } from "@inertiajs/vue3";
 import { money } from "@/utils/money.js";
 import { route } from "ziggy-js";
+import { reactive, computed } from "vue";
+import { cartCount } from "@/stores/cart"; // reactive cart store
 
-const props = defineProps({
-  cartItems: Array, // passed from backend
-});
+// Props from backend
+const props = defineProps<{
+  cartItems: Array<{
+    id: number;
+    quantity: number;
+    product: {
+      name: string;
+      price: number;
+    };
+  }>;
+}>();
 
+// Reactive object to track cart items locally
+const localCartItems = reactive([...props.cartItems]);
+
+// Form for checkout
 const form = useForm({
   payment_method: "cod",
   address: "",
 });
+
+// Computed subtotal
+const subtotal = computed(() =>
+  localCartItems.reduce((sum, i) => sum + i.product.price * i.quantity, 0)
+);
+
+// Remove item function
+function removeItem(id: number) {
+  const index = localCartItems.findIndex((i) => i.id === id);
+  if (index !== -1) {
+    cartCount.value -= localCartItems[index].quantity; // update cart badge
+    localCartItems.splice(index, 1); // remove locally
+  }
+}
+
+// Handle checkout submission
+function submitCheckout() {
+  form.post(route("checkout.store"), {
+    data: {
+      cartItems: localCartItems,
+    },
+  });
+}
 </script>
 
 <template>
-  <CustomerLayout
-    :breadcrumbs="[
-      { title: 'Home', href: route('customer.home.index') },
-      {
-        title: 'Checkout',
-        href: route('checkout.index'),
-      },
-    ]"
-  >
-    <div class="max-w-xl mx-auto p-6 bg-gray-800 text-gray-100 rounded shadow-md">
+  <AppLayout :breadcrumbs="[{ title: 'Home', href: route('customer.home.index') }]">
+    <div
+      class="mt-6 px-4 sm:px-6 lg:px-8 py-6 max-w-4xl mx-auto bg-gray-800 text-gray-100 rounded shadow-md"
+    >
       <h1 class="text-xl font-bold mb-4">Checkout</h1>
 
       <!-- Cart Summary -->
       <div class="mb-6">
         <h2 class="font-semibold mb-2">Your Cart</h2>
         <ul>
-          <li v-for="item in cartItems" :key="item.id" class="flex justify-between">
+          <li
+            v-for="item in localCartItems"
+            :key="item.id"
+            class="flex justify-between items-center mb-2"
+          >
             <span>{{ item.product.name }} x {{ item.quantity }}</span>
             <span>{{ money(item.product.price * item.quantity) }}</span>
+            <button
+              @click="removeItem(item.id)"
+              class="ml-4 px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+            >
+              Remove
+            </button>
           </li>
         </ul>
-        <div class="mt-2 font-bold">
-          Subtotal:
-          {{ money(cartItems.reduce((sum, i) => sum + i.product.price * i.quantity, 0)) }}
-        </div>
+        <div class="mt-2 font-bold">Subtotal: {{ money(subtotal) }}</div>
       </div>
 
       <!-- Checkout Form -->
-      <form @submit.prevent="form.post('/checkout')">
+      <form @submit.prevent="submitCheckout">
         <div class="mb-4">
           <label class="font-semibold block mb-1">Shipping Address</label>
           <textarea
@@ -52,7 +90,7 @@ const form = useForm({
           ></textarea>
           <div
             v-if="form.errors.address"
-            class="w-full border border-gray-700 bg-gray-900 text-gray-100 p-2 rounded"
+            class="w-full border border-gray-700 bg-gray-900 text-gray-100 p-2 rounded mt-1"
           >
             {{ form.errors.address }}
           </div>
@@ -71,11 +109,16 @@ const form = useForm({
 
         <button
           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-          :disabled="form.processing"
+          :disabled="form.processing || localCartItems.length === 0"
         >
           Place Order
         </button>
       </form>
+
+      <!-- Empty Cart Notice -->
+      <div v-if="localCartItems.length === 0" class="mt-4 text-gray-400">
+        Your cart is empty 😢
+      </div>
     </div>
-  </CustomerLayout>
+  </AppLayout>
 </template>

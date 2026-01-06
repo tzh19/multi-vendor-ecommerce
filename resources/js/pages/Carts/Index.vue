@@ -1,59 +1,68 @@
-<script setup>
-import CustomerLayout from "@/Layouts/CustomerLayout.vue";
+<script setup lang="ts">
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link, router } from "@inertiajs/vue3";
 import ConfirmModal from "@/Components/ConfirmModal.vue";
 import { reactive } from "vue";
 import { money } from "@/utils/money.js";
 import { route } from "ziggy-js";
+import { cartCount } from "@/stores/cart"; // reactive cart store
 
-const props = defineProps({
-  cartItems: Array,
-});
-const showModal = reactive({}); // empty object
+const props = defineProps<{
+  cartItems: Array<{
+    id: number;
+    quantity: number;
+    product: {
+      name: string;
+      price: number;
+      image_url: string;
+    };
+  }>;
+}>();
 
-function confirmDelete(id) {
-  showModal[id] = true; // works now
+const showModal = reactive({}); // track modal for each item
+
+function confirmDelete(id: number) {
+  showModal[id] = true;
 }
 
-function handleConfirm(id) {
-  router.delete(route("cart.destroy", id));
+function handleConfirm(id: number) {
+  router.delete(route("cart.destroy", id), {
+    onSuccess: () => {
+      const item = props.cartItems.find((i) => i.id === id);
+      if (item) cartCount.value -= item.quantity;
+    },
+  });
   showModal[id] = false;
 }
 
-function handleCancel(id) {
+function handleCancel(id: number) {
   showModal[id] = false;
 }
 </script>
 
 <template>
-  <CustomerLayout
-    :breadcrumbs="[
-      { title: 'Home', href: route('customer.home.index') },
-      {
-        title: 'Your Cart',
-        href: route('cart.index'),
-      },
-    ]"
-  >
-    <div class="p-6">
-      <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
+  <AppLayout :breadcrumbs="[{ title: 'Your Cart', href: route('cart.index') }]">
+    <div class="px-4 sm:px-6 lg:px-8 py-6">
+      <h1 class="text-2xl font-bold mb-6 text-gray-100">Your Cart</h1>
 
-      <div v-if="!props.cartItems.length" class="text-gray-500">
+      <!-- Empty Cart -->
+      <div v-if="!props.cartItems.length" class="text-gray-400">
         Your cart is empty 😢
       </div>
 
+      <!-- Cart Items -->
       <div v-else class="space-y-4">
         <div
-          v-for="item in cartItems"
+          v-for="item in props.cartItems"
           :key="item.id"
-          class="flex items-center gap-4 border p-4 rounded"
+          class="flex items-center gap-4 border p-4 rounded bg-gray-800/50"
         >
           <img :src="item.product.image_url" class="w-20 h-20 object-cover rounded" />
 
           <div class="flex-1">
-            <h2 class="font-semibold text-lg">{{ item.product.name }}</h2>
-            <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
-            <p class="font-bold">{{ money(item.product.price) }}</p>
+            <h2 class="font-semibold text-lg text-gray-100">{{ item.product.name }}</h2>
+            <p class="text-gray-400">Quantity: {{ item.quantity }}</p>
+            <p class="font-bold text-gray-100">{{ money(item.product.price) }}</p>
           </div>
 
           <button
@@ -72,6 +81,7 @@ function handleCancel(id) {
         </div>
       </div>
 
+      <!-- Checkout Button -->
       <div v-if="props.cartItems.length" class="mt-6">
         <Link
           href="/checkout"
@@ -81,5 +91,5 @@ function handleCancel(id) {
         </Link>
       </div>
     </div>
-  </CustomerLayout>
+  </AppLayout>
 </template>

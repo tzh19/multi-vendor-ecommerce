@@ -1,24 +1,41 @@
-<script setup>
-import CustomerLayout from "@/Layouts/CustomerLayout.vue";
-import { money } from "@/utils/money.js";
+<script setup lang="ts">
+import AppLayout from "@/Layouts/AppLayout.vue";
+import { Head } from "@inertiajs/vue3";
+import { money } from "@/utils/money";
 import { route } from "ziggy-js";
 
-const props = defineProps({
-  order: Object,
-});
+const props = defineProps<{
+  order: {
+    id: number;
+    total_price: number;
+    status: string;
+    items: Array<{
+      id: number;
+      quantity: number;
+      price: number;
+      product: {
+        name: string;
+        image: string;
+      };
+    }>;
+  };
+}>();
 </script>
 
 <template>
-  <CustomerLayout
+  <Head :title="`Order #${props.order.id}`" />
+
+  <AppLayout
     :breadcrumbs="[
       { title: 'Home', href: route('customer.home.index') },
       {
         title: `Order #${props.order.id}`,
-        href: route('customer.orders.show', order.id),
+        href: route('customer.orders.show', props.order.id),
       },
     ]"
   >
-    <div class="p-6 text-gray-200">
+    <!-- Page padding wrapper -->
+    <div class="px-4 sm:px-6 lg:px-8 py-6 text-gray-200">
       <h1 class="text-2xl font-bold mb-6">Order #{{ props.order.id }}</h1>
 
       <div class="p-4 bg-gray-800/60 border border-gray-700 rounded-lg mb-6">
@@ -48,5 +65,5 @@ const props = defineProps({
         </div>
       </div>
     </div>
-  </CustomerLayout>
+  </AppLayout>
 </template>
