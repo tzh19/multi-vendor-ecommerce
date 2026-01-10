@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import CustomerLayout from "@/Layouts/CustomerLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { router } from "@inertiajs/vue3";
 import type { BreadcrumbItemType } from "@/types";
 import { money } from "@/utils/money.js";
 import { route } from "ziggy-js";
+import { ShoppingCart } from "lucide-vue-next";
 
 const props = defineProps<{
   category: { id: number; name: string; description?: string };
@@ -28,7 +29,7 @@ function addToCart(productId: number) {
 </script>
 
 <template>
-  <CustomerLayout
+  <AppLayout
     :breadcrumbs="[
       { title: 'Home', href: route('customer.home.index') },
       { title: props.category.name },
@@ -64,13 +65,14 @@ function addToCart(productId: number) {
 
             <button
               @click="addToCart(product.id)"
-              class="mt-auto w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 mt-4"
+              class="mt-4 w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 text-white hover:bg-blue-700 transition"
             >
+              <ShoppingCart class="w-5 h-5" />
               Add to Cart
             </button>
           </div>
         </div>
       </div>
     </div>
-  </CustomerLayout>
+  </AppLayout>
 </template>

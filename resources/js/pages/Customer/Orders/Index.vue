@@ -19,24 +19,30 @@ const props = defineProps<{
     ]"
   >
     <!-- Page padding wrapper -->
-    <div class="px-4 sm:px-6 lg:px-8 py-6 text-gray-200">
+    <div class="px-4 sm:px-6 lg:px-8 py-6 text-gray-900 dark:text-gray-100">
       <h1 class="text-2xl font-bold mb-6">My Orders</h1>
 
-      <div v-if="!props.orders.length" class="text-gray-400">You have no orders yet.</div>
+      <!-- Empty state -->
+      <div v-if="!props.orders.length" class="text-gray-600 dark:text-gray-400">
+        You have no orders yet.
+      </div>
 
+      <!-- Orders list -->
       <div v-else class="space-y-4">
         <div
           v-for="order in props.orders"
           :key="order.id"
-          class="p-4 rounded-lg bg-gray-800/60 border border-gray-700"
+          class="p-4 rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800/60"
         >
           <div class="flex justify-between items-center">
             <div>
               <p class="font-semibold">Order #{{ order.id }}</p>
 
-              <p class="text-sm text-gray-400">Total: {{ money(order.total_price) }}</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Total: {{ money(order.total_price) }}
+              </p>
 
-              <p class="text-sm text-gray-400">
+              <p class="text-sm text-gray-600 dark:text-gray-400">
                 Status:
                 <span class="capitalize">
                   {{ order.status }}
@@ -46,7 +52,7 @@ const props = defineProps<{
 
             <Link
               :href="route('customer.orders.show', order.id)"
-              class="text-blue-400 hover:underline"
+              class="text-blue-600 dark:text-blue-400 hover:underline"
             >
               View
             </Link>

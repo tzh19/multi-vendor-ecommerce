@@ -48,12 +48,15 @@ const dummyImage =
           @input="search"
           type="text"
           placeholder="Search products..."
-          class="w-full rounded-lg bg-gray-800 border border-gray-700 px-4 py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full rounded-lg px-4 py-2 bg-white border border-gray-300 text-gray-900 placeholder-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <!-- No Products -->
-      <div v-if="products.data.length === 0" class="text-center text-gray-400 py-12">
+      <div
+        v-if="products.data.length === 0"
+        class="text-center text-gray-500 dark:text-gray-400 py-12"
+      >
         No products found.
       </div>
 
@@ -74,7 +77,7 @@ const dummyImage =
         <button
           v-if="products.prev_page_url"
           @click="$inertia.visit(products.prev_page_url)"
-          class="px-3 py-1 rounded border border-gray-700 text-gray-300 hover:bg-gray-700"
+          class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
         >
           Previous
         </button>
@@ -87,7 +90,7 @@ const dummyImage =
             'px-3 py-1 rounded border transition',
             page === products.current_page
               ? 'bg-blue-600 border-blue-600 text-white'
-              : 'border-gray-700 text-gray-300 hover:bg-gray-700',
+              : 'border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700',
           ]"
         >
           {{ page }}
@@ -96,7 +99,7 @@ const dummyImage =
         <button
           v-if="products.next_page_url"
           @click="$inertia.visit(products.next_page_url)"
-          class="px-3 py-1 rounded border border-gray-700 text-gray-300 hover:bg-gray-700"
+          class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
         >
           Next
         </button>

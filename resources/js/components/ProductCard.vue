@@ -33,7 +33,7 @@ function addToCart(productId: number) {
 
 <template>
   <div
-    class="group rounded-xl border border-gray-700 bg-gray-800 overflow-hidden hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition"
+    class="group rounded-xl border overflow-hidden transition border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 flex flex-col"
   >
     <!-- Image -->
     <img
@@ -43,11 +43,27 @@ function addToCart(productId: number) {
     />
 
     <!-- Content -->
-    <div class="p-4">
-      <h2 class="text-lg font-semibold text-gray-100">{{ product.name }}</h2>
-      <p class="text-sm text-gray-400">{{ product.vendor?.name || "Unknown vendor" }}</p>
-      <p class="text-xl font-bold text-gray-100 mt-2">{{ money(product.price) }}</p>
+    <div class="p-4 flex flex-col justify-between flex-1">
+      <div>
+        <!-- Product Name -->
+        <h2
+          class="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 mb-1"
+        >
+          {{ product.name }}
+        </h2>
 
+        <!-- Vendor Name -->
+        <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
+          {{ product.vendor?.name || "Unknown vendor" }}
+        </p>
+
+        <!-- Price -->
+        <p class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-2">
+          {{ money(product.price) }}
+        </p>
+      </div>
+
+      <!-- Add to Cart Button -->
       <button
         @click="addToCart(product.id)"
         class="mt-4 w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 text-white hover:bg-blue-700 transition"

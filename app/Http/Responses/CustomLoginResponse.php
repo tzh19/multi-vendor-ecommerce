@@ -10,16 +10,16 @@ class CustomLoginResponse implements LoginResponseContract
     {
         $user = $request->user();
 
-        if ($user->hasRole('customer')) {
-            return redirect()->route('products.index');
+        if ($user->hasRole('admin')) {
+            return redirect()->intended(route('dashboard'));
         }
 
         if ($user->hasRole('vendor')) {
-            return redirect()->route('vendor.dashboard');
+            return redirect()->intended(route('vendor.dashboard'));
         }
 
-        if ($user->hasRole('admin')) {
-            return redirect()->route('dashboard');
+        if ($user->hasRole('customer')) {
+            return redirect()->route('products.index');
         }
 
         return redirect()->route('dashboard');

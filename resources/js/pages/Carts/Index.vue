@@ -43,10 +43,10 @@ function handleCancel(id: number) {
 <template>
   <AppLayout :breadcrumbs="[{ title: 'Your Cart', href: route('cart.index') }]">
     <div class="px-4 sm:px-6 lg:px-8 py-6">
-      <h1 class="text-2xl font-bold mb-6 text-gray-100">Your Cart</h1>
+      <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Your Cart</h1>
 
       <!-- Empty Cart -->
-      <div v-if="!props.cartItems.length" class="text-gray-400">
+      <div v-if="!props.cartItems.length" class="text-gray-600 dark:text-gray-400">
         Your cart is empty 😢
       </div>
 
@@ -55,14 +55,20 @@ function handleCancel(id: number) {
         <div
           v-for="item in props.cartItems"
           :key="item.id"
-          class="flex items-center gap-4 border p-4 rounded bg-gray-800/50"
+          class="flex items-center gap-4 p-4 rounded border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800/50"
         >
           <img :src="item.product.image_url" class="w-20 h-20 object-cover rounded" />
 
           <div class="flex-1">
-            <h2 class="font-semibold text-lg text-gray-100">{{ item.product.name }}</h2>
-            <p class="text-gray-400">Quantity: {{ item.quantity }}</p>
-            <p class="font-bold text-gray-100">{{ money(item.product.price) }}</p>
+            <h2 class="font-semibold text-lg text-gray-900 dark:text-gray-100">
+              {{ item.product.name }}
+            </h2>
+
+            <p class="text-gray-600 dark:text-gray-400">Quantity: {{ item.quantity }}</p>
+
+            <p class="font-bold text-gray-900 dark:text-gray-100">
+              {{ money(item.product.price) }}
+            </p>
           </div>
 
           <button

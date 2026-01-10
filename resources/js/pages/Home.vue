@@ -26,7 +26,9 @@ const dummyImage =
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="px-4 sm:px-6 lg:px-8 py-4">
-      <div class="rounded-xl border border-gray-700 bg-gray-800 p-6">
+      <div
+        class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
+      >
         <div
           v-if="categories.length"
           class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"
@@ -46,7 +48,7 @@ const dummyImage =
 
             <!-- Content -->
             <div class="p-4">
-              <h3 class="font-semibold text-lg text-gray-100">
+              <h3 class="font-semibold text-lg text-gray-900 dark:text-gray-100">
                 {{ category.name }}
               </h3>
 
