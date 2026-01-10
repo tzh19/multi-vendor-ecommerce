@@ -15,7 +15,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Users, Box, Store, ShoppingBag, Home, Package   } from 'lucide-vue-next';
+import { LayoutDashboard, BookOpen, Folder, LayoutGrid, Users, Box, Store, ShoppingBag, Home, Package   } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { route } from 'ziggy-js';
 
@@ -30,7 +30,7 @@ const isCustomer = role === 'customer';
 const mainNavItems: NavItem[] = [
   ...(isAdmin
     ? [
-  { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
+  { title: 'Dashboard', href: dashboard(), icon: LayoutDashboard },
    ]
     : []),
      ...(isVendor
@@ -38,7 +38,7 @@ const mainNavItems: NavItem[] = [
         {
           title: 'Dashboard',
           href: route('vendor.dashboard'),
-          icon: LayoutGrid,
+          icon: LayoutDashboard,
         },
       ]
     : []),
@@ -51,12 +51,12 @@ const mainNavItems: NavItem[] = [
         },
       ]
     : []),
-  ...(isAdmin || isVendor
+  ...(isAdmin
     ? [
       { title: 'Category', href: route('categories.index'), icon: Folder },
       ]
     : []),
-    ...(isAdmin || isVendor
+    ...(isAdmin
     ? [
   {
         title: 'Vendor',
@@ -64,7 +64,7 @@ const mainNavItems: NavItem[] = [
         href: null,
   }, ]
     : []),
-    ...(isAdmin || isVendor
+    ...(isAdmin
     ? [
   { title: 'Management', href: route('vendors.index'), icon: Store },
    ]
