@@ -2,34 +2,30 @@
   <form @submit.prevent="onSubmit" class="space-y-6">
     <!-- Category -->
     <div class="grid gap-2">
-      <Label for="category_id">Category</Label>
+      <Label>Category</Label>
 
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="w-full h-12 px-3 flex items-center justify-between rounded border border-gray-700 bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-12 px-3 flex items-center justify-between rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <span>
             {{
               form.category_id
-                ? categories.find((u) => u.id === form.category_id)?.name
+                ? categories.find((c) => c.id === form.category_id)?.name
                 : "Select category"
             }}
           </span>
-
           <span class="text-gray-400 text-xs">▼</span>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
-          :side-offset="4"
-          :align="'start'"
-          :avoid-collisions="false"
-          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-lg border border-gray-700 bg-gray-900 text-gray-100 shadow-xl p-1"
+          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-md border border-gray-200 bg-white text-gray-900 shadow-lg p-1"
         >
           <DropdownMenuItem
             v-for="category in categories"
             :key="category.id"
             @click="form.category_id = category.id"
-            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-800 focus:bg-gray-800"
+            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-100"
           >
             {{ category.name }}
           </DropdownMenuItem>
@@ -39,36 +35,32 @@
       <InputError :message="form.errors.category_id" />
     </div>
 
-    <!-- Vendor -->
-    <div class="grid gap-2">
-      <Label for="category_id">Vendor</Label>
+    <!-- Vendor (Admin only) -->
+    <div v-if="!isVendor" class="grid gap-2">
+      <Label>Vendor</Label>
 
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="w-full h-12 px-3 flex items-center justify-between rounded border border-gray-700 bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-12 px-3 flex items-center justify-between rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <span>
             {{
               form.vendor_id
-                ? vendors.find((u) => u.id === form.vendor_id)?.store_name
+                ? vendors.find((v) => v.id === form.vendor_id)?.store_name
                 : "Select vendor"
             }}
           </span>
-
           <span class="text-gray-400 text-xs">▼</span>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
-          :side-offset="4"
-          :align="'start'"
-          :avoid-collisions="false"
-          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-lg border border-gray-700 bg-gray-900 text-gray-100 shadow-xl p-1"
+          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-md border border-gray-200 bg-white text-gray-900 shadow-lg p-1"
         >
           <DropdownMenuItem
             v-for="vendor in vendors"
             :key="vendor.id"
             @click="form.vendor_id = vendor.id"
-            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-800 focus:bg-gray-800"
+            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-100"
           >
             {{ vendor.store_name }}
           </DropdownMenuItem>
@@ -77,6 +69,9 @@
 
       <InputError :message="form.errors.vendor_id" />
     </div>
+
+    <!-- Hidden vendor_id for vendor role -->
+    <input v-if="isVendor" type="hidden" name="vendor_id" v-model="form.vendor_id" />
 
     <!-- Product Name -->
     <div class="grid gap-2">
@@ -177,8 +172,10 @@
     </div>
   </form>
 </template>
-
 <script setup lang="ts">
+import { ref, computed, watchEffect } from "vue";
+import { usePage } from "@inertiajs/vue3";
+
 import Label from "@/Components/ui/label/Label.vue";
 import Input from "@/Components/ui/input/Input.vue";
 import InputError from "@/Components/InputError.vue";
@@ -194,31 +191,29 @@ const props = defineProps({
   form: Object,
   onSubmit: Function,
   submitText: String,
-  vendors: {
-    type: Array,
-    required: true,
-  },
-  categories: {
-    type: Array,
-    required: true,
-  },
-  product: {
-    type: Object,
-    default: null,
-  },
+  vendors: Array,
+  categories: Array,
+  product: Object,
 });
 
-import { ref } from "vue";
+/* ---------- AUTH ---------- */
+const page = usePage();
+const user = computed(() => page.props.auth?.user ?? null);
+const isVendor = computed(() => user.value?.role === "vendor");
 
-const imagePreview = ref(null);
-
-function previewImage(event) {
-  const file = event.target.files?.[0];
-
-  if (!file) {
-    imagePreview.value = null;
-    return;
+/* ---------- FORCE vendor_id ---------- */
+watchEffect(() => {
+  if (isVendor.value && user.value?.id) {
+    props.form.vendor_id = user.value.id;
   }
+});
+
+/* ---------- Image preview ---------- */
+const imagePreview = ref<string | null>(null);
+
+function previewImage(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (!file) return;
 
   imagePreview.value = URL.createObjectURL(file);
   props.form.image = file;

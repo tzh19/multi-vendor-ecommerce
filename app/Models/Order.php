@@ -34,4 +34,11 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function belongsToVendor(int $vendorId): bool
+    {
+        return $this->items()
+            ->whereHas('product', fn ($q) => $q->where('vendor_id', $vendorId))
+            ->exists();
+    }
 }

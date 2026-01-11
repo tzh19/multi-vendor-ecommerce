@@ -22,6 +22,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: route('vendor.orders.index'),
   },
 ];
+
+const statusStyles: Record<string, string> = {
+  processing: 'bg-yellow-100 text-yellow-800 ring-yellow-200',
+  confirmed: 'bg-blue-100 text-blue-800 ring-blue-200',
+  shipped: 'bg-purple-100 text-purple-800 ring-purple-200',
+  completed: 'bg-green-100 text-green-800 ring-green-200',
+  cancelled: 'bg-red-100 text-red-800 ring-red-200',
+};
 </script>
 
 <template>
@@ -58,13 +66,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <td class="py-3">{{ money(order.subtotal ?? 0) }}</td>
                     <td class="py-3">
                       <span
-                        class="px-2 py-1 rounded-full text-xs font-semibold"
-                        :class="{
-                          'bg-blue-900 text-white': order.status === 'pending',
-                          'bg-blue-700 text-white': order.status === 'processing',
-                          'bg-green-900 text-white': order.status === 'completed',
-                          'bg-red-900 text-white': order.status === 'canceled',
-                        }"
+                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold capitalize ring-1"
+                        :class="
+                          statusStyles[order.status] ??
+                          'bg-gray-100 text-gray-700 ring-gray-200'
+                        "
                       >
                         {{ order.status }}
                       </span>

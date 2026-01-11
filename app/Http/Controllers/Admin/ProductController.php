@@ -89,6 +89,12 @@ class ProductController extends Controller
             $imagePath = $request->file('image')->store('products', 'public');
         }
 
+        $user = auth()->user();
+
+        if ($user->role === 'vendor') {
+            $validateda['vendor_id'] = $user->id;
+        }
+
         $product = Product::create([
             'name'        => $validated['name'],
             'description' => $validated['description'],
@@ -147,6 +153,14 @@ class ProductController extends Controller
             'stock' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+
+        $user = auth()->user();
+
+        if ($user->role === 'vendor') {
+            $validateda['vendor_id'] = $user->id;
+        }
+
 
         $product->update([
             'name' => $validated['name'],

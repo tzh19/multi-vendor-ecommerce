@@ -59,6 +59,7 @@ class VendorOrderController extends Controller
                 'email' => $order->user?->email,
                 'total_items' => $order->items->sum('quantity'),
                 'total' => number_format($order->total, 2),
+                'status' => $order->status,
                 'created_at' => $order->created_at->format('d M, Y'),
                 'items' => $order->items->map(function ($item) {
                     return [
@@ -75,6 +76,45 @@ class VendorOrderController extends Controller
             'order' => $transformedOrder,
         ]);
 
+    }
+
+    public function updateStatus(Request $request, string $id)
+    {
+        $order = Order::findOrFail($id);
+
+        $request->validate([
+            'status' => 'required|in:processing,confirmed,shipped,completed,cancelled',
+        ]);
+
+
+        abort_if(
+            ! $order->belongsToVendor(auth()->id()),
+            403,
+            'Unauthorized action.'
+        );
+
+        $allowedTransitions = [
+            'processing' => ['confirmed', 'cancelled'],
+            'confirmed'  => ['shipped'],
+            'shipped'    => ['completed'],
+            'completed'  => [],
+            'cancelled'  => [],
+        ];
+
+        $currentStatus = $order->status;
+        $newStatus = $request->status;
+
+        abort_if(
+            ! in_array($newStatus, $allowedTransitions[$currentStatus] ?? []),
+            422,
+            'Invalid status transition.'
+        );
+
+        $order->update([
+            'status' => $newStatus,
+        ]);
+
+        return back()->with('success', 'Order status updated successfully.');
     }
 
 }

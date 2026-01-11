@@ -3,6 +3,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
 import { route } from 'ziggy-js';
+import { router } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps({
   order: Object,
@@ -22,6 +24,35 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: route('vendor.orders.show', props.order.id),
   },
 ];
+
+const allowedTransitions: Record<string, string[]> = {
+  processing: ['confirmed', 'cancelled'],
+  confirmed: ['shipped'],
+  shipped: ['completed'],
+  completed: [],
+  cancelled: [],
+};
+
+const availableStatuses = computed(() => {
+  return allowedTransitions[props.order.status] ?? [];
+});
+
+function updateStatus(status: string) {
+  if (status === 'cancelled' && !confirm('Are you sure you want to cancel this order?')) {
+    return;
+  }
+
+   router.patch(
+    route('vendor.orders.update-status', props.order.id),
+    { status },
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        router.reload({ only: ['order'] });
+      },
+    }
+  );
+}
 </script>
 
 <template>
@@ -30,9 +61,42 @@ const breadcrumbs: BreadcrumbItem[] = [
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex flex-col gap-6 p-4">
       <!-- Header -->
-      <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold">Order #{{ order.id }}</h1>
-        <p class="text-gray-500 dark:text-gray-400">{{ order.created_at }}</p>
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold">Order #{{ order.id }}</h1>
+          <p class="text-gray-500 dark:text-gray-400 text-sm">
+            {{ order.created_at }}
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Status Badge -->
+          <span
+            class="px-3 py-1 rounded-full text-xs font-semibold capitalize"
+            :class="{
+              'bg-yellow-100 text-yellow-700': order.status === 'processing',
+              'bg-blue-100 text-blue-700': order.status === 'confirmed',
+              'bg-purple-100 text-purple-700': order.status === 'shipped',
+              'bg-green-100 text-green-700': order.status === 'completed',
+              'bg-red-100 text-red-700': order.status === 'cancelled',
+            }"
+          >
+            {{ order.status }}
+          </span>
+
+          <!-- Change Status -->
+          <select
+            class="h-9 rounded-md border px-2 text-sm bg-background capitalize"
+            :disabled="availableStatuses.length === 0"
+            @change="updateStatus(($event.target as HTMLSelectElement).value)"
+          >
+            <option value="" selected disabled>Change status</option>
+
+            <option v-for="status in availableStatuses" :key="status" :value="status">
+              {{ status }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <!-- Customer Info Card -->

@@ -89,6 +89,12 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::get('dashboard', [ \App\Http\Controllers\Vendor\VendorDashboardController::class, 'index'])->name('dashboard');
     });
 
+    Route::patch(
+        '/vendor/orders/{order}/status',
+        [\App\Http\Controllers\Vendor\VendorOrderController::class, 'updateStatus']
+    )->name('vendor.orders.update-status');
+
+
 });
 
 // Customer
