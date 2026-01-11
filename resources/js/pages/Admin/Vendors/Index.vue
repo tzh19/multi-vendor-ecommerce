@@ -61,7 +61,7 @@ function handleCancel() {
             <!-- Table Wrapper Card -->
             <div class="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
               <table class="w-full text-sm">
-                <thead class="bg-gray-800 text-gray-200 text-left">
+                <thead>
                   <tr>
                     <th class="px-4 py-2 w-16">ID</th>
                     <th class="px-4 py-2">Name</th>

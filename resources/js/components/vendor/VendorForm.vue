@@ -3,16 +3,16 @@
     <!-- Vendor User -->
     <div class="grid gap-2">
       <Label for="user_id">Assign Vendor User</Label>
-
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="w-full h-12 px-3 flex items-center justify-between rounded border border-gray-700 bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-12 px-3 flex items-center justify-between rounded-lg border border-gray-300 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <span>
+          <span class="truncate text-gray-400" v-if="!form.user_id">
+            Select vendor user
+          </span>
+          <span class="truncate text-gray-900" v-else>
             {{
-              form.user_id
-                ? vendorUsers.find((u) => u.id === form.user_id)?.name
-                : "Select vendor user"
+              vendorUsers.find((u) => u.id === form.user_id)?.name || "Select vendor user"
             }}
           </span>
 
@@ -21,17 +21,21 @@
 
         <DropdownMenuContent
           :side-offset="4"
-          :align="'start'"
+          align="start"
           :avoid-collisions="false"
-          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-lg border border-gray-700 bg-gray-900 text-gray-100 shadow-xl p-1"
+          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-lg border border-gray-200 text-gray-900 shadow-lg p-1"
         >
           <DropdownMenuItem
             v-for="user in vendorUsers"
             :key="user.id"
             @select="form.user_id = user.id"
-            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-800 focus:bg-gray-800"
+            class="px-3 py-2 rounded-md cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
           >
             {{ user.name }}
+            <pre class="text-xs text-red-500">
+form.user_id: {{ form.user_id }}
+</pre
+            >
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -75,7 +79,7 @@
         :class="form.active ? 'bg-green-600' : 'bg-gray-300'"
       >
         <span
-          class="inline-block h-5 w-5 transform rounded-full bg-white transition"
+          class="inline-block h-5 w-5 transform rounded-full transition"
           :class="form.active ? 'translate-x-6' : 'translate-x-1'"
         />
       </button>
@@ -103,6 +107,7 @@
 </template>
 
 <script setup lang="ts">
+import { reactive } from "vue";
 import Label from "@/Components/ui/label/Label.vue";
 import Input from "@/Components/ui/input/Input.vue";
 import InputError from "@/Components/InputError.vue";
@@ -115,12 +120,14 @@ import {
 } from "@/Components/ui/dropdown-menu";
 
 const props = defineProps({
-  form: Object,
-  onSubmit: Function,
-  submitText: String,
   vendorUsers: {
     type: Array,
     required: true,
+    default: () => [],
   },
+  vendor: Object,
+  submitText: String,
+  form: Object,
+  onSubmit: Function,
 });
 </script>

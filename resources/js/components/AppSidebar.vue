@@ -42,18 +42,34 @@ const mainNavItems: NavItem[] = [
         },
       ]
     : []),
+     ...(isAdmin
+    ? [
+  {
+        title: 'User',
+        icon: null,
+        href: null,
+  }, ]
+    : []),
   ...(isAdmin
     ? [
         {
-          title: 'User',
+          title: 'Management',
           href: route('users.index'),
           icon: Users,
         },
       ]
     : []),
+     ...(isAdmin
+    ? [
+  {
+        title: 'Category',
+        icon: null,
+        href: null,
+  }, ]
+    : []),
   ...(isAdmin
     ? [
-      { title: 'Category', href: route('categories.index'), icon: Folder },
+      { title: 'Management', href: route('categories.index'), icon: Folder },
       ]
     : []),
     ...(isAdmin

@@ -42,12 +42,22 @@ function handleCancel() {
 </script>
 <template>
   <Head title="Users" />
+
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="p-4">
       <div class="py-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="shadow rounded-lg p-6">
-            <h2 class="text-xl font-bold mb-4">Users</h2>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-bold">Users</h2>
+              <!-- Add User Button -->
+              <Link
+                href="/users/create"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                + Add User
+              </Link>
+            </div>
             <!-- Table Wrapper Card -->
             <div class="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
               <table class="w-full text-sm">

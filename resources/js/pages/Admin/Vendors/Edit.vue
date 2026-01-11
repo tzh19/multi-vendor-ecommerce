@@ -78,6 +78,15 @@ const form = useForm({
 });
 
 function submit() {
-  form.put(route("vendors.update", props.vendor.id));
+  form.put(route("vendors.update", props.vendor.id), {
+    preserveScroll: true,
+    onSuccess: () => {
+      // optional: show toast / success message
+      console.log("Vendor updated!");
+    },
+    onError: (errors) => {
+      console.log(errors);
+    },
+  });
 }
 </script>

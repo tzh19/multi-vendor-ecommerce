@@ -6,7 +6,7 @@
 
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="w-full h-12 px-3 flex items-center justify-between rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-12 px-3 flex items-center justify-between rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <span>
             {{
@@ -19,13 +19,10 @@
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
-          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-md border border-gray-200 bg-white text-gray-900 shadow-lg p-1"
+          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-lg p-1"
         >
           <DropdownMenuItem
-            v-for="category in categories"
-            :key="category.id"
-            @click="form.category_id = category.id"
-            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-100"
+            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
           >
             {{ category.name }}
           </DropdownMenuItem>
@@ -41,7 +38,7 @@
 
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="w-full h-12 px-3 flex items-center justify-between rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full h-12 px-3 flex items-center justify-between rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <span>
             {{
@@ -54,13 +51,13 @@
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
-          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-md border border-gray-200 bg-white text-gray-900 shadow-lg p-1"
+          class="w-[var(--radix-dropdown-menu-trigger-width)] mt-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-lg p-1"
         >
           <DropdownMenuItem
             v-for="vendor in vendors"
             :key="vendor.id"
             @click="form.vendor_id = vendor.id"
-            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-100"
+            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
           >
             {{ vendor.store_name }}
           </DropdownMenuItem>
@@ -81,7 +78,7 @@
         name="name"
         v-model="form.name"
         placeholder="Enter product name"
-        class="mt-1 block w-full h-12 px-3 text-lg rounded border"
+        class="mt-1 block w-full h-12 px-3 text-lg rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500"
         required
       />
       <InputError :message="form.errors.name" />

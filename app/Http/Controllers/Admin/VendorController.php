@@ -85,7 +85,13 @@ class VendorController extends Controller
         $vendor = Vendor::findOrFail($id);
 
         $user = new User();
-        $vendorUsers = $user->getUserByRole('vendor');
+
+        if (auth()->user()->role === 'vendor') {
+            $vendorUsers = User::whereIn('role', ['vendor', 'admin'])->get();
+        } else {
+            // admin
+            $vendorUsers = User::whereIn('role', ['vendor', 'admin'])->get();
+        }
 
         return Inertia::render('Admin/Vendors/Edit', [
             'vendor' => $vendor,
@@ -106,7 +112,7 @@ class VendorController extends Controller
                 'store_name' => 'required|string|max:255|unique:vendors,store_name,' . $id,
                 'store_description' => 'nullable|string',
                 'active' => 'boolean',
-                'user_id' => 'required|exists:users,id',
+                 'user_id' => 'nullable|exists:users,id',
             ],
             [
                 'store_name.required' => 'Vendor name is required.',
@@ -115,6 +121,7 @@ class VendorController extends Controller
         );
 
         $vendor->update($validated);
+
 
         return redirect()->route('vendors.index')->with('success', 'Vendor updated successfully');
 
