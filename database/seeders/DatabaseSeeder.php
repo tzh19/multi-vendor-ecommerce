@@ -14,10 +14,16 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
+        // $this->call([
+        //            OrderSeeder::class,
+        //            OrderItemSeeder::class
+        //        ]);
+
+
         $this->call([
-                   OrderSeeder::class,
-                   OrderItemSeeder::class
-               ]);
+            WeeklyOrdersSeeder::class,
+        ]);
+
 
     }
 }

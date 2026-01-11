@@ -16,6 +16,14 @@ class OrderFactory extends Factory
         $subtotal = $this->faker->randomFloat(2, 20, 500);
         $shipping_fee = $this->faker->randomFloat(2, 5, 20);
 
+
+        // Random day within last 7 days
+        $createdAt = now()->subDays(rand(0, 6))->setTime(
+            rand(0, 23), // hour
+            rand(0, 59), // minute
+            rand(0, 59)  // second
+        );
+
         return [
             'user_id'        => User::inRandomOrder()->first()->id ?? 1,
             'order_number'   => 'ORD-' . strtoupper(Str::random(10)),
@@ -24,8 +32,10 @@ class OrderFactory extends Factory
             'total_price'    => $subtotal + $shipping_fee,
             'payment_method' => $this->faker->randomElement(['cod', 'card']),
             'address'        => $this->faker->address(),
-            'status'         => 'processing',
-            'payment_status' => 'pending',
+            'status'         => 'completed', // to show in weekly sales
+            'payment_status' => 'paid',
+            'created_at'     => $createdAt,
+            'updated_at'     => $createdAt,
         ];
     }
 }

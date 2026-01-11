@@ -12,20 +12,20 @@ const props = defineProps({
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: 'Vendor Dashboard',
-    href: route('vendor.dashboard'),
+    title: 'Dashboard',
+    href: route('dashboard'),
   },
   {
     title: 'Orders',
-    href: route('vendor.orders.index'),
+    href: route('admin.orders.index'),
   },
   {
     title: `Order #${props.order.id}`,
-    href: route('vendor.orders.show', props.order.id),
+    href: route('admin.orders.show', props.order.id),
   },
 ];
+
 const selectedStatus = ref('');
-const order = reactive({ ...props.order }); // make a reactive copy
 
 const allowedTransitions: Record<string, string[]> = {
   processing: ['confirmed', 'cancelled'],
@@ -35,8 +35,10 @@ const allowedTransitions: Record<string, string[]> = {
   cancelled: [],
 };
 
+const order = reactive({ ...props.order }); // make a reactive copy
+
 const availableStatuses = computed(() => {
-  return allowedTransitions[props.order.status] ?? [];
+  return allowedTransitions[order.status] ?? [];
 });
 
 function updateStatus(status: string) {
@@ -45,7 +47,7 @@ function updateStatus(status: string) {
   if (status === 'cancelled' && !confirm('Are you sure you want to cancel this order?')) return;
 
   router.patch(
-    route('vendor.orders.update-status', order.id),
+    route('admin.orders.update-status', order.id),
     { status },
     {
       preserveScroll: true,

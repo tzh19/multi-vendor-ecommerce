@@ -13,18 +13,21 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::middleware(['role:admin,vendor'])->group(function () {
-        Route::get('dashboard', function () {
 
-            $user = auth()->user();
-
-            return Inertia::render('Dashboard', [
-                'isAdmin'  => $user->hasRole('admin'),
-                'isVendor' => $user->hasRole('vendor'),
-            ]);
-
-        })->name('dashboard');
+    Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+        Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
+            ->name('dashboard');
     });
+
+
+    Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
+
+        // Optional: update order status
+        Route::patch('orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
+    });
+
 
     Route::middleware(['role:admin,vendor'])
         ->group(function () {

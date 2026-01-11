@@ -97,6 +97,24 @@ const mainNavItems: NavItem[] = [
     ? [
   { title: 'Management', href: route('admin.products.index'), icon: Box },]
     : []),
+    ...(isAdmin
+    ? [
+  {
+        title: 'Order',
+        icon: null,
+        href: null,
+  },
+   ]
+    : []),
+   ...(isAdmin
+    ? [
+        {
+          title: 'Management',
+          href: route('admin.orders.index'),
+          icon: LayoutGrid,
+        },
+      ]
+    : []),
   ...(isVendor
     ? [
   {
