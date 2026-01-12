@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Breadcrumbs from "@/components/Breadcrumbs.vue";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import Breadcrumbs from "@/Components/Breadcrumbs.vue";
+import { SidebarTrigger } from "@/Components/ui/sidebar";
 import { ShoppingCart } from "lucide-vue-next";
 import { Link } from "@inertiajs/vue3";
 import { cartCount } from "@/stores/cart";

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLayout from "@/layouts/app/AppSidebarLayout.vue";
-import FlashMessage from "@/components/FlashMessage.vue";
+import FlashMessage from "@/Components/FlashMessage.vue";
 
 import type { BreadcrumbItemType } from "@/types";
 import { usePage } from "@inertiajs/vue3";

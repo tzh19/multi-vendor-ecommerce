@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage, Link, router } from '@inertiajs/vue3';
-import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import PlaceholderPattern from '../Components/PlaceholderPattern.vue';
 import { ref } from "vue";
 import ConfirmModal from "@/Components/ConfirmModal.vue";
 

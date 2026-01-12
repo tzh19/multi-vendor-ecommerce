@@ -6,7 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-} from "@/components/ui/dropdown-menu";
+} from "@/Components/ui/dropdown-menu";
 import UserMenu from "@/Components/UserMenuContent.vue";
 
 interface Props {

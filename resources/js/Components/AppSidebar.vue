@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import NavFooter from '@/components/NavFooter.vue';
-import NavMain from '@/components/NavMain.vue';
-import NavUser from '@/components/NavUser.vue';
+import NavFooter from '@/Components/NavFooter.vue';
+import NavMain from '@/Components/NavMain.vue';
+import NavUser from '@/Components/NavUser.vue';
 import {
     Sidebar,
     SidebarContent,
@@ -11,7 +11,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from '@/Components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
