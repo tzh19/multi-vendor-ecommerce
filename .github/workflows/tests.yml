@@ -17,11 +17,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Setup PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -29,32 +27,26 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
-      # Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
 
-      # Install Node dependencies
       - name: Install Node Dependencies
         run: npm ci || true
 
-      # Install PHP dependencies
       - name: Install PHP Dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader || true
 
-      # Copy .env and generate APP_KEY
       - name: Prepare Environment
         run: |
-          cp .env.example .env
-          php artisan key:generate --force --no-interaction
+          cp .env.example .env || true
+          php artisan key:generate --force --no-interaction || true
 
-      # Build assets (ignore warnings)
       - name: Build Assets
         run: npm run build || true
 
-      # Run tests (this is the only step that can fail)
       - name: Run Tests
         env:
           DB_CONNECTION: sqlite
