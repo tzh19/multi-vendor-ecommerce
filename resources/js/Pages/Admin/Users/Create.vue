@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, router } from "@inertiajs/vue3";
-import UserForm from "@/Components/User/UserForm.vue";
+import UserForm from "@/Components/user/UserForm.vue";
 
 function submit(form: any) {
   form.post(route("users.store"), {
