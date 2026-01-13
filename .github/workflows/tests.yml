@@ -40,14 +40,10 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Copy Environment File
-        run: cp .env.example .env || true
+        run: cp .env.example .env
 
       - name: Generate Application Key
-        run: |
-          # If APP_KEY is missing or empty, generate it
-          if ! grep -q '^APP_KEY=' .env || grep -q '^APP_KEY=$' .env; then
-            php artisan key:generate --no-interaction
-          fi
+        run: php artisan key:generate --force --no-interaction
 
       - name: Build Assets
         run: npm run build
