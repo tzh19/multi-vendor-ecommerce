@@ -44,8 +44,9 @@ jobs:
 
       - name: Generate Application Key
         run: |
-          if ! grep -q APP_KEY .env; then
-            php artisan key:generate
+          # If APP_KEY is missing or empty, generate it
+          if ! grep -q '^APP_KEY=' .env || grep -q '^APP_KEY=$' .env; then
+            php artisan key:generate --no-interaction
           fi
 
       - name: Build Assets
