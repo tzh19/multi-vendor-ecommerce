@@ -54,7 +54,7 @@ jobs:
       - name: Build Assets
         run: npm run build || true
 
-      # Run tests (the only step that can fail)
+      # Run tests
       - name: Run Tests
         env:
           DB_CONNECTION: sqlite
