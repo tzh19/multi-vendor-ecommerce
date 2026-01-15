@@ -73,37 +73,41 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $user = auth()->user();
+
+        $validationRules = [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'vendor_id' => 'required|exists:vendors,id',
             'price' => 'required|numeric',
             'stock' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
+        ];
+
+        // Only admins can specify which vendor (vendors.id)
+        if ($user->role === 'admin') {
+            $validationRules['vendor_id'] = 'required|exists:vendors,id';
+        }
+
+        $validated = $request->validate($validationRules);
+
+        // For vendors, get their vendor record ID
+        if ($user->role === 'vendor') {
+            $vendor = $user->vendor; // Get the vendor record
+
+            if (!$vendor) {
+                return back()->withErrors(['error' => 'Vendor profile not found.']);
+            }
+
+            $validated['vendor_id'] = $vendor->id; // Use vendors.id
+        }
 
         $imagePath = null;
-
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
         }
 
-        $user = auth()->user();
-
-        if ($user->role === 'vendor') {
-            $validateda['vendor_id'] = $user->id;
-        }
-
-        $product = Product::create([
-            'name'        => $validated['name'],
-            'description' => $validated['description'],
-            'category_id' => $validated['category_id'],
-            'vendor_id'   => $validated['vendor_id'],
-            'price'       => $validated['price'],
-            'stock'       => $validated['stock'],
-            'image'       => $imagePath,
-        ]);
+        Product::create(array_merge($validated, ['image' => $imagePath]));
 
         return redirect()
             ->route('admin.products.index')
@@ -186,12 +190,10 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->authorize('delete', $product);
-
         $product = Product::findOrFail($id);
+        $this->authorize('delete', $product);
         $product->delete();
-
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully');
-
     }
+
 }
