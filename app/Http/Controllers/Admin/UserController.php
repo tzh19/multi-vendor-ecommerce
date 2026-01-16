@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -87,6 +86,11 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
+
+        if ($user->id === auth()->id()) {
+            abort(403, 'You cannot delete yourself.');
+        }
+
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully');
