@@ -4,13 +4,20 @@ import { Head, usePage, Link } from "@inertiajs/vue3";
 import type { BreadcrumbItem } from "@/types";
 import { route } from "ziggy-js";
 
-const { categories } = usePage().props as {
+const { categories, auth } = usePage().props as {
   categories: Array<{
     id: number;
     name: string;
     description?: string;
     products_count: number;
   }>;
+  auth: {
+    user: null | {
+      id: number;
+      name: string;
+      email: string;
+    };
+  };
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -26,6 +33,24 @@ const dummyImage =
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="px-4 sm:px-6 lg:px-8 py-4">
+      <!-- Guest Login/Register -->
+      <div v-if="!auth.user" class="flex justify-end mb-4 gap-2">
+        <Link
+          :href="route('login')"
+          class="px-4 py-2 rounded-md border border-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        >
+          Login
+        </Link>
+
+        <Link
+          :href="route('register')"
+          class="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
+        >
+          Register
+        </Link>
+      </div>
+
+      <!-- Categories Grid -->
       <div
         class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
       >
@@ -39,23 +64,18 @@ const dummyImage =
             :href="route('categories.show', category.id)"
             class="group border border-gray-700 rounded-lg overflow-hidden hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition"
           >
-            <!-- Image -->
             <img
               :src="dummyImage"
               alt="Category"
               class="h-32 w-full object-cover group-hover:scale-105 transition"
             />
-
-            <!-- Content -->
             <div class="p-4">
               <h3 class="font-semibold text-lg text-gray-900 dark:text-gray-100">
                 {{ category.name }}
               </h3>
-
               <p class="text-sm text-gray-400 mt-1">
                 {{ category.description || "Browse products" }}
               </p>
-
               <p class="text-xs text-gray-500 mt-2">
                 {{ category.products_count }} products
               </p>
