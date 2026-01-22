@@ -22,7 +22,7 @@
 import { useForm } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import { Head, router } from "@inertiajs/vue3";
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/layouts/AppLayout.vue";
 import Label from "@/Components/ui/label/Label.vue";
 import Input from "@/Components/ui/input/Input.vue";
 import InputError from "@/Components/InputError.vue";

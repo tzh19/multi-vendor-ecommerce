@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/layouts/AppLayout.vue";
 import { Link, router } from "@inertiajs/vue3";
 import ConfirmModal from "@/Components/ConfirmModal.vue";
 import { reactive } from "vue";

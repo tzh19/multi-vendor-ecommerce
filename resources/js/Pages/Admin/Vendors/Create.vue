@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { useForm, Head, usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/layouts/AppLayout.vue";
 import VendorForm from "@/Components/vendor/VendorForm.vue";
 
 const breadcrumbs = [

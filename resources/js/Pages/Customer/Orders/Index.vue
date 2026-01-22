@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/layouts/AppLayout.vue";
 import { Link, Head } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import { money } from "@/utils/money";

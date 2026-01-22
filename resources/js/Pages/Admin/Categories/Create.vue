@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { useForm, Head } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/layouts/AppLayout.vue";
 import CategoryForm from "@/Components/category/CategoryForm.vue";
 
 const breadcrumbs = [
