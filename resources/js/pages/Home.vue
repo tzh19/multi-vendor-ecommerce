@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/layouts/AppLayout.vue";
 import { Head, usePage, Link } from "@inertiajs/vue3";
 import type { BreadcrumbItem } from "@/types";
 import { route } from "ziggy-js";
