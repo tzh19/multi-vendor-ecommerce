@@ -1,19 +1,22 @@
-name: Deploy Laravel to Railway
+name: Deploy Laravel + Vite to Railway
 
 on:
   push:
     branches:
       - master
+  # Optional: manual trigger for migrations
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repo
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Install PHP & Composer
+      # 2. Setup PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -21,26 +24,61 @@ jobs:
           extensions: mbstring, bcmath, pdo_mysql, curl, fileinfo, tokenizer, xml, json
           ini-values: post_max_size=256M, upload_max_filesize=256M
 
+      # 3. Install PHP dependencies
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      # Install Node & build assets
+      # 4. Setup Node
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install NPM dependencies
+      # 5. Install NPM dependencies
+      - name: Install Node dependencies
         run: npm install
 
+      # 6. Build Vite assets
       - name: Build Vite assets
         run: npm run build
 
-      # Set up Railway CLI
+      # 7. Clear and cache Laravel config
+      - name: Clear & cache Laravel config
+        run: |
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan route:clear
+          php artisan view:clear
+          php artisan config:cache
+
+      # 8. Install Railway CLI
       - name: Install Railway CLI
         run: curl -sSL https://railway.app/install.sh | sh
 
+      # 9. Deploy to Railway
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
         run: railway up --detach
+
+  # Optional: separate job to run migrations manually
+  migrate:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' # only manual trigger
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, pdo_mysql, curl, fileinfo, tokenizer, xml, json
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Run Migrations
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
+        run: php artisan migrate --force
