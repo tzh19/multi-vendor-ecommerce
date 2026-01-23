@@ -4,21 +4,16 @@ import vue from '@vitejs/plugin-vue';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+    base: process.env.APP_URL ? process.env.APP_URL + '/' : '/', // ensures HTTPS in production
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],
             refresh: true,
-            server: {
-                origin: process.env.APP_URL,
-            },
-            build: {
-                manifest: true,
-            },
         }),
         vue({
             template: {
                 transformAssetUrls: {
-                    base: process.env.APP_URL,
+                    base: null,
                     includeAbsolute: false,
                 },
             },
