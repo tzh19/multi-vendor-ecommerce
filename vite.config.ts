@@ -1,21 +1,19 @@
-import { wayfinder } from '@laravel/vite-plugin-wayfinder';
-import tailwindcss from '@tailwindcss/vite';
-import vue from '@vitejs/plugin-vue';
-import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+import tailwindcss from '@tailwindcss/vite';
+import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 
 export default defineConfig({
+    base: process.env.VITE_APP_URL + '/', // ensures assets use HTTPS
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],
             ssr: 'resources/js/ssr.ts',
             refresh: true,
-            publicDirectory: 'public',
         }),
         tailwindcss(),
-        wayfinder({
-            formVariants: true,
-        }),
+        wayfinder({ formVariants: true }),
         vue({
             template: {
                 transformAssetUrls: {
@@ -25,10 +23,4 @@ export default defineConfig({
             },
         }),
     ],
-    base: process.env.APP_URL ? process.env.APP_URL + '/' : '/', // ensures HTTPS assets
-    server: {
-        hmr: {
-            host: process.env.APP_URL || 'localhost',
-        },
-    },
 });
