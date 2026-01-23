@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch: # manual trigger for optional migrations
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 1. Set up .env from GitHub secrets
+      # 1. Create .env
       - name: Set environment
         run: |
           echo 'APP_NAME="My Awesome Shop"' > .env
@@ -32,74 +32,52 @@ jobs:
           echo "SESSION_DRIVER=database" >> .env
           echo "QUEUE_CONNECTION=database" >> .env
 
-      # 2. Setup PHP
+      # 2. PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, bcmath, pdo_mysql, curl, fileinfo, tokenizer, xml, json
+          extensions: mbstring, bcmath, pdo_mysql
 
-      # 3. Install Composer dependencies
+      # 3. Composer
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      # 4. Setup Node
+      # 4. Node
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # 5. Install NPM dependencies
       - name: Install Node dependencies
-        run: npm install
+        run: npm ci
 
-      # 6. Build Vite assets
       - name: Build Vite assets
         run: npm run build
 
-      # 7. Clear and cache Laravel config
-      - name: Clear & cache Laravel config
+      # 5. Laravel cache
+      - name: Optimize Laravel
         run: |
+          php artisan key:generate --force
           php artisan config:clear
-          php artisan cache:clear
-          php artisan route:clear
-          php artisan view:clear
           php artisan config:cache
+          php artisan route:cache
+          php artisan view:clear
 
-      # 8. Install Railway CLI
+      # 6. Install Railway CLI
       - name: Install Railway CLI
-        run: curl -sSL https://railway.app/install.sh | sh
+        run: npm install -g @railway/cli
 
-      # 9. Deploy to Railway
+      # 7. Verify auth
+      - name: Verify Railway auth
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
+        run: railway whoami
+
+      # 8. Deploy (NO interactive linking)
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
         run: railway up --detach
-
-  # Optional: separate job to run migrations manually
-  migrate:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' # manual trigger only
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, bcmath, pdo_mysql, curl, fileinfo, tokenizer, xml, json
-
-      - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader
-
-      - name: Run Migrations
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
-          DB_CONNECTION: mysql
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: php artisan migrate --force
