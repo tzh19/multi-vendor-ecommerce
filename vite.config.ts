@@ -10,6 +10,7 @@ export default defineConfig({
             input: ['resources/js/app.ts'],
             ssr: 'resources/js/ssr.ts',
             refresh: true,
+            publicDirectory: 'public',
         }),
         tailwindcss(),
         wayfinder({
@@ -24,4 +25,10 @@ export default defineConfig({
             },
         }),
     ],
+    base: process.env.APP_URL ? process.env.APP_URL + '/' : '/', // ensures HTTPS assets
+    server: {
+        hmr: {
+            host: process.env.APP_URL || 'localhost',
+        },
+    },
 });
