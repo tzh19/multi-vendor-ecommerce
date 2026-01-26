@@ -12,7 +12,6 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/Components/ui/sidebar';
-import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { LayoutDashboard, BookOpen, Folder, LayoutGrid, Users, Box, Store, ShoppingBag, Home, Package   } from 'lucide-vue-next';
@@ -30,7 +29,7 @@ const isCustomer = role === 'customer';
 const mainNavItems: NavItem[] = [
   ...(isAdmin
     ? [
-  { title: 'Dashboard', href: dashboard(), icon: LayoutDashboard },
+  { title: 'Dashboard', href: route('dashboard'), icon: LayoutDashboard },
    ]
     : []),
      ...(isVendor
@@ -173,7 +172,7 @@ const footerNavItems: NavItem[] = [
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" as-child>
-            <Link :href="dashboard()">
+            <Link :href="route('dashboard')">
               <AppLogo />
             </Link>
           </SidebarMenuButton>
