@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { reactive } from "vue";
 import InputError from "@/Components/InputError.vue";
 import TextLink from "@/Components/TextLink.vue";
 import { Button } from "@/Components/ui/button";
@@ -7,9 +8,6 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Spinner } from "@/Components/ui/spinner";
 import AuthBase from "@/layouts/AuthLayout.vue";
-import { register } from "@/routes";
-import { store } from "@/routes/login";
-import { request } from "@/routes/password";
 import { Form, Head } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 
@@ -18,6 +16,13 @@ defineProps<{
   canResetPassword: boolean;
   canRegister: boolean;
 }>();
+
+// Reactive login form
+const form = reactive({
+  email: "",
+  password: "",
+  remember: false,
+});
 </script>
 
 <template>
@@ -32,8 +37,10 @@ defineProps<{
     </div>
 
     <Form
-      v-bind="store.form()"
-      :reset-on-success="['password']"
+      :action="route('login')"
+      method="post"
+      v-model="form"
+      reset-on-success
       v-slot="{ errors, processing }"
       class="flex flex-col gap-6"
     >
@@ -46,7 +53,6 @@ defineProps<{
             name="email"
             required
             autofocus
-            :tabindex="1"
             autocomplete="email"
             placeholder="email@example.com"
           />
@@ -58,9 +64,8 @@ defineProps<{
             <Label for="password">Password</Label>
             <TextLink
               v-if="canResetPassword"
-              :href="request()"
+              :href="route('password.request')"
               class="text-sm"
-              :tabindex="5"
             >
               Forgot password?
             </TextLink>
@@ -70,7 +75,6 @@ defineProps<{
             type="password"
             name="password"
             required
-            :tabindex="2"
             autocomplete="current-password"
             placeholder="Password"
           />
@@ -79,18 +83,12 @@ defineProps<{
 
         <div class="flex items-center justify-between">
           <Label for="remember" class="flex items-center space-x-3">
-            <Checkbox id="remember" name="remember" :tabindex="3" />
+            <Checkbox id="remember" name="remember" />
             <span>Remember me</span>
           </Label>
         </div>
 
-        <Button
-          type="submit"
-          class="mt-4 w-full"
-          :tabindex="4"
-          :disabled="processing"
-          data-test="login-button"
-        >
+        <Button type="submit" class="mt-4 w-full" :disabled="processing">
           <Spinner v-if="processing" />
           Log in
         </Button>
@@ -98,7 +96,7 @@ defineProps<{
 
       <div class="text-center text-sm text-muted-foreground" v-if="canRegister">
         Don't have an account?
-        <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
+        <TextLink :href="route('register')">Sign up</TextLink>
       </div>
     </Form>
   </AuthBase>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { reactive } from "vue";
+import { Form, Head } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import TextLink from "@/Components/TextLink.vue";
 import { Button } from "@/Components/ui/button";
@@ -6,13 +8,15 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Spinner } from "@/Components/ui/spinner";
 import AuthLayout from "@/layouts/AuthLayout.vue";
-import { login } from "@/routes";
-import { email } from "@/routes/password";
-import { Form, Head } from "@inertiajs/vue3";
 
 defineProps<{
   status?: string;
 }>();
+
+// Create a simple reactive form
+const form = reactive({
+  email: "",
+});
 </script>
 
 <template>
@@ -22,12 +26,19 @@ defineProps<{
   >
     <Head title="Forgot password" />
 
+    <!-- Success message -->
     <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
       {{ status }}
     </div>
 
     <div class="space-y-6">
-      <Form v-bind="email.form()" v-slot="{ errors, processing }">
+      <!-- Form -->
+      <Form
+        :action="'/forgot-password'"
+        method="post"
+        v-model="form"
+        v-slot="{ errors, processing }"
+      >
         <div class="grid gap-2">
           <Label for="email">Email address</Label>
           <Input
@@ -53,9 +64,10 @@ defineProps<{
         </div>
       </Form>
 
+      <!-- Back to login -->
       <div class="space-x-1 text-center text-sm text-muted-foreground">
         <span>Or, return to</span>
-        <TextLink :href="route('login')">log in</TextLink>
+        <TextLink href="/login">log in</TextLink>
       </div>
     </div>
   </AuthLayout>
