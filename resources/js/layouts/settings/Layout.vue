@@ -3,29 +3,27 @@ import Heading from '@/Components/Heading.vue';
 import { Button } from '@/Components/ui/button';
 import { Separator } from '@/Components/ui/separator';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { edit as editAppearance } from '@/routes/appearance';
-import { edit as editProfile } from '@/routes/profile';
-import { show } from '@/routes/two-factor';
-import { edit as editPassword } from '@/routes/user-password';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
-        href: editProfile(),
+        href: route('profile.edit'),
     },
     {
         title: 'Password',
-        href: editPassword(),
+        href: route('password.edit'),
     },
     {
         title: 'Appearance',
-        href: editAppearance(),
-    },
+        href: route('appearance.edit'),
+    }
 ];
 
-const currentPath = typeof window !== undefined ? window.location.pathname : '';
+const currentPath =
+    typeof window !== 'undefined' ? window.location.pathname : '';
 </script>
 
 <template>

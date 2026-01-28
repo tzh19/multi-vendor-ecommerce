@@ -6,9 +6,15 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Spinner } from "@/Components/ui/spinner";
 import AuthBase from "@/layouts/AuthLayout.vue";
-import { login } from "@/routes";
-import { store } from "@/routes/register";
-import { Form, Head } from "@inertiajs/vue3";
+import { Form, Head, useForm } from "@inertiajs/vue3";
+import { route } from "ziggy-js";
+
+const form = useForm({
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+});
 </script>
 
 <template>
@@ -19,7 +25,9 @@ import { Form, Head } from "@inertiajs/vue3";
     <Head title="Register" />
 
     <Form
-      v-bind="store.form()"
+      :form="form"
+      :action="route('register')"
+      method="post"
       :reset-on-success="['password', 'password_confirmation']"
       v-slot="{ errors, processing }"
       class="flex flex-col gap-6"
