@@ -5,7 +5,10 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { initializeTheme } from './composables/useAppearance';
+import { route } from 'ziggy-js';
 
+(window as any).Ziggy = (window as any).Ziggy || {};
+(window as any).route = route;
 const appName = import.meta.env.VITE_APP_NAME || 'My Awesome Shop';
 
 createInertiaApp({
