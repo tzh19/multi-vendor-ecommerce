@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('customer.home.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -63,8 +64,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders', [\App\Http\Controllers\CustomerOrderController::class, 'index'])->name('customer.orders.index');
     Route::get('/customer/orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])
        ->name('customer.orders.show');
-
-    Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('customer.home.index');
 
     Route::get('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'show'])
         ->name('categories.show');
