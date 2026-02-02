@@ -1,25 +1,84 @@
-# Laravel + Vue Starter Kit
+# Multi-Vendor E-Commerce Platform
 
-## Introduction
+A multi-vendor e-commerce web application built with **Laravel**, **Inertia.js**, **Vue 3**, and **Tailwind CSS**.
 
-Our Vue starter kit provides a robust, modern starting point for building Laravel applications with a Vue frontend using [Inertia](https://inertiajs.com).
+This project is created as a **portfolio project** to practice real-world Laravel architecture, role-based access control, and modern SPA development.
 
-Inertia allows you to build modern, single-page Vue applications using classic server-side routing and controllers. This lets you enjoy the frontend power of Vue combined with the incredible backend productivity of Laravel and lightning-fast Vite compilation.
+## Features
 
-This Vue starter kit utilizes Vue 3 and the Composition API, TypeScript, Tailwind, and the [shadcn-vue](https://www.shadcn-vue.com) component library.
+### Authentication & UI
+- User authentication
+- Dark / light mode support
+- Responsive UI using Tailwind CSS
+- SPA experience powered by Inertia.js
 
-## Official Documentation
+### Roles & Permissions
+- **Admin**
+  - Manage users
+  - Manage categories
+  - Manage products
+  - View and manage all orders
+- **Vendor**
+  - Manage own products
+  - View vendor-specific orders
+  - Update order status
+- **Customer**
+  - Browse products
+  - Add items to cart
+  - Checkout and place orders
+  - View order history
 
-Documentation for all Laravel starter kits can be found on the [Laravel website](https://laravel.com/docs/starter-kits).
+## Tech Stack
 
-## Contributing
+- **Backend:** Laravel
+- **Frontend:** Vue 3, Inertia.js
+- **Styling:** Tailwind CSS
+- **Authentication:** Laravel Fortify
+- **Database:** MySQL / SQLite
+- **Build Tool:** Vite
+- **Deployment:** Railway
 
-Thank you for considering contributing to our starter kit! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Project Structure (Simplified)
+app/
+└── Http/
+├── Controllers/
+├── Middleware/
+└── Requests/ (planned)
+resources/
+└── js/
+├── Pages/
+├── Components/
+└── Layouts/
+routes/
+├── web.php
+└── settings.php
 
-## Code of Conduct
+## Local Setup
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
 
-## License
+composer install
+npm install
 
-The Laravel + Vue starter kit is open-sourced software licensed under the MIT license.
+cp .env.example .env
+php artisan key:generate
+
+php artisan migrate
+npm run dev
+php artisan serve
+```
+
+## Future Improvements
+- Future Improvements
+- Form Request validation
+- Order status history
+- Admin dashboard analytics
+- Automated tests
+
+## Project Purpose
+This project is built to:
+- Practice real-world Laravel + Vue architecture
+- Implement role-based systems
+- Serve as a long-term portfolio project
