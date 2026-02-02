@@ -39,6 +39,7 @@ This project is created as a **portfolio project** to practice real-world Larave
 - **Deployment:** Railway
 
 ## Project Structure (Simplified)
+```
 app/
 └── Http/
 ├── Controllers/
@@ -52,7 +53,7 @@ resources/
 routes/
 ├── web.php
 └── settings.php
-
+```
 ## Local Setup
 
 ```
