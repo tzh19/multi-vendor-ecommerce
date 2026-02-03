@@ -31,7 +31,7 @@ class ProductPolicy
     */
     public function view(User $user, Product $product): bool
     {
-        return $user->isVendor() && $product->vendor_id == $user->vendor->id;
+        return $this->ownsProduct($user, $product);
     }
 
     /**
@@ -48,7 +48,7 @@ class ProductPolicy
 
     public function update(User $user, Product $product): bool
     {
-        return $user->isVendor() && $product->vendor_id === $user->vendor->id;
+        return $this->ownsProduct($user, $product);
     }
 
     /**
@@ -56,7 +56,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product): bool
     {
-        return $user->isVendor() && $product->vendor_id === $user->vendor->id;
+        return $this->ownsProduct($user, $product);
     }
 
     /**
@@ -73,5 +73,10 @@ class ProductPolicy
     public function forceDelete(User $user, Product $product): bool
     {
         return false;
+    }
+
+    private function ownsProduct(User $user, Product $product)
+    {
+        return $user->isVendor() && $user->vendor && $product->vendor_id === $user->vendor->id;
     }
 }

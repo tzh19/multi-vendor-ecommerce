@@ -148,6 +148,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $this->authorize('update', $product);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -162,7 +164,7 @@ class ProductController extends Controller
         $user = auth()->user();
 
         if ($user->role === 'vendor') {
-            $validateda['vendor_id'] = $user->id;
+            $validated['vendor_id'] = $user->id;
         }
 
 
