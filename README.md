@@ -28,6 +28,12 @@ This project is created as a **portfolio project** to practice real-world Larave
   - Checkout and place orders
   - View order history
 
+### Access Control & Policies
+- Product actions are protected by `ProductPolicy`:
+  - Admin can manage all products
+  - Vendor can manage only their own products
+- Unit tests ensure policies behave correctly
+
 ## Tech Stack
 
 - **Backend:** Laravel
