@@ -13,5 +13,8 @@ abstract class TestCase extends BaseTestCase
         if (config('database.default') === 'sqlite') {
             \DB::statement('PRAGMA foreign_keys=ON;');
         }
+
+        $this->faker = \Faker\Factory::create();
+
     }
 }
