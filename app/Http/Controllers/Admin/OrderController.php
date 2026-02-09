@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 use App\Models\Order;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+use App\Notifications\OrderCompletedNotification;
 
 class OrderController extends Controller
 {
@@ -66,9 +67,19 @@ class OrderController extends Controller
             'status' => 'required|string|in:processing,confirmed,shipped,completed,cancelled',
         ]);
 
-        $order->update([
-            'status' => $request->status,
+        $status = $request->status;
+        $updated = $order->update([
+            'status' => $status,
         ]);
+
+        if ($updated) {
+            if ($status === 'completed') {
+                $order->user->notify(
+                    new OrderCompletedNotification($order)
+                );
+
+            }
+        }
 
         return redirect()->back()->with('success', 'Order status updated.');
     }
