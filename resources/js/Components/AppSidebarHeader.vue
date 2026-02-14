@@ -6,8 +6,10 @@ import { Link } from "@inertiajs/vue3";
 import { cartCount } from "@/stores/cart";
 import { route } from "ziggy-js";
 import { computed } from "vue";
+import { usePage } from "@inertiajs/vue3";
 
 import type { BreadcrumbItemType } from "@/types";
+import { Bell } from "lucide-vue-next";
 
 withDefaults(defineProps<{ breadcrumbs?: BreadcrumbItemType[] }>(), {
   breadcrumbs: () => [],
@@ -15,6 +17,11 @@ withDefaults(defineProps<{ breadcrumbs?: BreadcrumbItemType[] }>(), {
 
 // local computed to safely use in template
 const cartCountValue = computed(() => cartCount.value);
+
+const page = usePage();
+const notificationCount = computed(() => {
+  return Math.min(page.props.notificationCount, 9) as number;
+});
 </script>
 
 <template>
@@ -29,8 +36,21 @@ const cartCountValue = computed(() => cartCount.value);
       </template>
     </div>
 
-    <!-- Right: Cart icon -->
+    <!-- Right: Bell + Cart icon -->
     <div class="flex items-center gap-4">
+      <Link
+        :href="route('notification.index')"
+        class="relative text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"
+      >
+        <Bell class="w-6 h-6" />
+
+        <span
+          v-if="notificationCount > 0"
+          class="absolute -top-1 -right-2 w-5 h-5 flex items-center justify-center rounded-full bg-red-600 text-xs font-semibold text-white"
+        >
+          {{ notificationCount }}
+        </span>
+      </Link>
       <Link
         :href="route('cart.index')"
         class="relative text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"

@@ -68,6 +68,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'show'])
         ->name('categories.show');
 
+    Route::resource('notification', \App\Http\Controllers\NotificationController::class)->only(['index']);
+
 });
 
 

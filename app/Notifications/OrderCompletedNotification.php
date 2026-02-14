@@ -54,6 +54,8 @@ class OrderCompletedNotification extends Notification
             'user_id' => $this->order->user_id,
             'subtotal' => $this->order->subtotal,
             'order_number' => $this->order->order_number,
+            'title' => 'Order Shipped',
+            'message' => "Your order #{$this->order->order_number} has been shipped."
         ];
     }
 }
