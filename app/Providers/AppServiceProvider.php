@@ -5,8 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Notifications\DatabaseNotification;
+use App\Policies\NotificationPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
 
         }
+
         Inertia::share([
                'auth' => fn () => [
                    'user' => Auth::user(),
@@ -36,7 +39,9 @@ class AppServiceProvider extends ServiceProvider
                'cartCount' => fn () => Auth::check()
                ? Auth::user()->cartItems()->sum('quantity')
                : 0,
-           ]);
+        ]);
+
+        Gate::policy(DatabaseNotification::class, NotificationPolicy::class);
 
     }
 }

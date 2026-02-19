@@ -70,6 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('notification', \App\Http\Controllers\NotificationController::class)->only(['index']);
 
+    Route::put('notification/{notification}/seen', \App\Http\Controllers\NotificationSeenController::class)->name('notification.seen');
 });
 
 
