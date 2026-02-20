@@ -6,7 +6,7 @@ use Inertia\Inertia;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Notifications\OrderCompletedNotification;
+use App\Notifications\OrderStatusUpdatedNotification;
 
 class OrderController extends Controller
 {
@@ -73,12 +73,9 @@ class OrderController extends Controller
         ]);
 
         if ($updated) {
-            if ($status === 'completed') {
-                $order->user->notify(
-                    new OrderCompletedNotification($order)
-                );
-
-            }
+            $order->user->notify(
+                new OrderStatusUpdatedNotification($order)
+            );
         }
 
         return redirect()->back()->with('success', 'Order status updated.');
