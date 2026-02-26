@@ -23,9 +23,7 @@ function addToCart(productId: number) {
     route("cart.store"),
     { product_id: productId },
     {
-      onSuccess: () => {
-        cartCount.value++; // increment badge count
-      },
+      onSuccess: () => {},
     }
   );
 }
