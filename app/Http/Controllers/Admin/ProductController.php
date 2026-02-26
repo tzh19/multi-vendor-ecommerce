@@ -9,10 +9,18 @@ use App\Models\Product;
 use App\Models\Category;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
     use AuthorizesRequests;
+    protected $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
 
     /**
      * Display a listing of the resource.
@@ -75,45 +83,20 @@ class ProductController extends Controller
     {
         $user = auth()->user();
 
-        $validationRules = [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric',
-            'stock' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ];
+        $validated = $this->productService->validateProduct($request, $user);
 
-        // Only admins can specify which vendor (vendors.id)
-        if ($user->role === 'admin') {
-            $validationRules['vendor_id'] = 'required|exists:vendors,id';
+        if ($validated instanceof \Illuminate\Http\RedirectResponse) {
+            return $validated; // Return early if validation fails
         }
 
-        $validated = $request->validate($validationRules);
+        $imagePath = $this->productService->uploadImage($request->file('image'));
 
-        // For vendors, get their vendor record ID
-        if ($user->role === 'vendor') {
-            $vendor = $user->vendor; // Get the vendor record
-
-            if (!$vendor) {
-                return back()->withErrors(['error' => 'Vendor profile not found.']);
-            }
-
-            $validated['vendor_id'] = $vendor->id; // Use vendors.id
-        }
-
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-        }
-
-        Product::create(array_merge($validated, ['image' => $imagePath]));
+        $this->productService->createProduct($validated, $imagePath, $user);
 
         return redirect()
             ->route('admin.products.index')
             ->with('success', 'Product created successfully.');
     }
-
 
     /**
      * Display the specified resource.
