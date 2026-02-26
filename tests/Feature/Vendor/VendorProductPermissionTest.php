@@ -21,18 +21,23 @@ class VendorProductPermissionTest extends TestCase
         // Create a vendor record for this user
         $vendor = Vendor::factory()->create(['user_id' => $user->id]);
 
+        // Create category
         $category = Category::factory()->create();
 
-        $this->actingAs($user)
-             ->post(route('admin.products.store'), [
-                 'name' => 'Test Product',
-                 'description' => 'Test description',
-                 'price' => 100,
-                 'stock' => 10,
-                 'category_id' => $category->id,
-             ])
-             ->assertRedirect(route('admin.products.index'));
+        // Post product
+        $response = $this->actingAs($user)
+            ->post(route('admin.products.store'), [
+                'name' => 'Test Product',
+                'description' => 'Test description',
+                'price' => 100,
+                'stock' => 10,
+                'category_id' => $category->id,
+            ]);
 
+        // Assert redirect
+        $response->assertRedirect(route('admin.products.index'));
+
+        // Assert DB
         $this->assertDatabaseHas('products', [
             'name' => 'Test Product',
             'vendor_id' => $vendor->id,
