@@ -24,6 +24,17 @@ class CategoryService
         return $category;
     }
 
+    public function editCategory($id, $data)
+    {
+        $category = Category::findOrFail($id);
+        $category->name = $data['name'];
+        $category->description = $data['description'] ?? null;
+        $category->slug = Str::slug($data['name']);
+        $category->save();
+
+        return $category;
+    }
+
     public function validateCategory(Request $request)
     {
         $rules = [
