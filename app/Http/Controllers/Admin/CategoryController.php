@@ -84,23 +84,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validated = $this->categoryService->validateCategory($request);
 
-        $category = Category::findOrFail($id);
+        if ($validated instanceof \Illuminate\Http\RedirectResponse) {
+            return $validated; // Return early if validation fails
+        }
 
-        $validated = $request->validate(
-            [
-                'name' => 'required|string|max:255|unique:categories,name,' . $id,
-                'description' => 'nullable|string',
-            ],
-            [
-                'name.required' => 'Category name is required.',
-                'name.unique' => 'Category name has already been taken.',
-            ]
-        );
+        $this->categoryService->editCategory($id, $validated);
 
-        $category->update($validated);
-
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully');
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     /**
