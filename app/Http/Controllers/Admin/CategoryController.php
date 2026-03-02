@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     public function index()
     {
         $categories = Category::latest()->paginate(10)->through(fn ($category) => [
@@ -40,22 +48,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate(
-            [
-                'name' => 'required|string|max:255|unique:categories,name',
-                'description' => 'nullable|string',
-            ],
-            [
-                'name.required' => 'Category name is required.',
-                'name.unique' => 'Category name has already been taken.',
-            ]
-        );
+        $validated = $this->categoryService->validateCategory($request);
 
-        $category = new Category();
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->slug = Str::slug($request->name);
-        $category->save();
+        if ($validated instanceof \Illuminate\Http\RedirectResponse) {
+            return $validated; // Return early if validation fails
+        }
+
+        $this->categoryService->createCategory($validated);
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
@@ -85,23 +84,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validated = $this->categoryService->validateCategory($request);
 
-        $category = Category::findOrFail($id);
+        if ($validated instanceof \Illuminate\Http\RedirectResponse) {
+            return $validated; // Return early if validation fails
+        }
 
-        $validated = $request->validate(
-            [
-                'name' => 'required|string|max:255|unique:categories,name,' . $id,
-                'description' => 'nullable|string',
-            ],
-            [
-                'name.required' => 'Category name is required.',
-                'name.unique' => 'Category name has already been taken.',
-            ]
-        );
+        $this->categoryService->editCategory($id, $validated);
 
-        $category->update($validated);
-
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully');
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     /**
